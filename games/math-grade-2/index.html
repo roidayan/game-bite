@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>אלופי החשבון - כיתה ב'</title>
+
+  <!-- תגיות מטא מותאמות לתצוגה מקדימה מלאה בוואטסאפ וברשתות חברתיות -->
+  <meta name="description" content="אלופי החשבון לכיתה ב' - תרגול חווייתי ומהנה בחיבור, חיסור, כפל למתחילים, מעבדת בדידים ולוח טיוטה!">
+  <meta itemprop="name" content="אלופי החשבון - כיתה ב' 🎒">
+  <meta itemprop="description" content="משחקים ומתרגלים חשבון לכיתה ב': חיבור וחיסור עד 100, כפל, דילוגים, בדידים ולוח טיוטה!">
+  <meta itemprop="image" content="https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=1200&h=630&q=80">
+
+  <meta property="og:site_name" content="אלופי החשבון">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="אלופי החשבון - כיתה ב' 🎒 לומדים ונהנים במספרים!">
+  <meta property="og:description" content="משחקים ומתרגלים חשבון לכיתה ב': חיבור וחיסור עד 100, כפל, דילוגים, בדידים ולוח טיוטה!">
+  <!-- תמונת מתמטיקה ומשחק תקנית: 1200x630 (יחס 1.91:1), משקל נמוך מ-150KB (עומד במגבלת 300KB של WhatsApp), ללא חסימת בוטים -->
+  <meta property="og:image" content="https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=1200&h=630&q=80">
+  <meta property="og:image:secure_url" content="https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=1200&h=630&q=80">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="אלופי החשבון לכיתה ב - משחקים ומחשבים">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="אלופי החשבון - כיתה ב' 🎒">
+  <meta name="twitter:description" content="משחקים ומתרגלים חשבון לכיתה ב' עם עזרים חזותיים ובדידים!">
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=1200&h=630&q=80">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦁</text></svg>">
+  <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=1200&h=630&q=80">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800;900&family=Varela+Round&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    * {
+      font-family: 'Varela Round', 'Rubik', sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    .btn-press {
+      transition: all 0.12s ease;
+    }
+    .btn-press:active {
+      transform: translateY(3px) scale(0.98);
+    }
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(-3deg); }
+      50% { transform: rotate(3deg); }
+    }
+    .animate-wiggle {
+      animation: wiggle 0.8s ease-in-out infinite;
+    }
+    @keyframes bounce-gentle {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    .animate-bounce-gentle {
+      animation: bounce-gentle 2s infinite;
+    }
+    /* קיבוע כיוון משוואות מתמטיות משמאל לימין ללא עיוותי עברית */
+    .math-ltr-box {
+      direction: ltr !important;
+      unicode-bidi: isolate;
+      text-align: center;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.65rem;
+    }
+    .bg-pattern {
+      background-color: #f8fafc;
+      background-image: radial-gradient(#cbd5e1 1.2px, transparent 1.2px), radial-gradient(#e2e8f0 1.2px, #f8fafc 1.2px);
+      background-size: 32px 32px;
+      background-position: 0 0, 16px 16px;
+    }
+    /* מניעת חיתוך טקסטים ותגיות */
+    .tag-badge {
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body class="bg-pattern min-h-screen text-slate-800 flex flex-col justify-between overflow-x-hidden">
+
+  <!-- Header גולל עם הדף -->
+  <header class="bg-white/95 backdrop-blur-md border-b-4 border-indigo-400 px-2.5 sm:px-4 py-2 sm:py-3 shadow-sm">
+    <div class="max-w-5xl mx-auto flex flex-wrap items-center justify-between gap-2 sm:gap-3">
+      
+      <!-- Brand & Mascot -->
+      <div class="flex items-center gap-2 sm:gap-3 cursor-pointer min-w-0" onclick="showView('home')">
+        <div class="w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 bg-gradient-to-tr from-amber-400 to-yellow-300 rounded-xl sm:rounded-2xl flex items-center justify-center text-xl sm:text-2xl shadow-md border-2 border-amber-500 animate-bounce-gentle shrink-0">
+          🦁
+        </div>
+        <div class="min-w-0">
+          <div class="flex items-center gap-1 sm:gap-1.5 flex-wrap">
+            <h1 class="text-base sm:text-xl md:text-2xl font-black text-indigo-700 tracking-wide flex items-center gap-1 shrink-0">
+              אלופי החשבון
+            </h1>
+            <span class="tag-badge text-[10px] sm:text-xs bg-indigo-100 text-indigo-800 font-bold px-1.5 sm:px-2 py-0.5 rounded-full">כיתה ב'</span>
+            <span class="tag-badge text-[10px] sm:text-[11px] font-extrabold bg-emerald-100 text-emerald-800 px-1.5 sm:px-2 py-0.5 rounded-full border border-emerald-300 shadow-sm">גרסה 2.0</span>
+          </div>
+          <p class="text-[11px] text-slate-500 font-semibold hidden md:block">לומדים, נהנים ומצליחים במספרים!</p>
+        </div>
+      </div>
+
+      <!-- Stats Bar & Quick Tools -->
+      <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        <div class="bg-orange-50 border-2 border-orange-200 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-xl sm:rounded-2xl flex items-center gap-1 shadow-sm">
+          <span class="text-sm sm:text-base">🔥</span>
+          <span id="streakCount" class="font-black text-orange-600 text-xs sm:text-sm md:text-base">0</span>
+          <span class="text-[11px] text-orange-500 hidden sm:inline font-bold">רצף</span>
+        </div>
+
+        <div class="bg-amber-50 border-2 border-amber-300 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-xl sm:rounded-2xl flex items-center gap-1 shadow-sm">
+          <span class="text-sm sm:text-base animate-wiggle">⭐</span>
+          <span id="starsCount" class="font-black text-amber-600 text-xs sm:text-sm md:text-base">0</span>
+        </div>
+
+        <button id="soundToggle" onclick="toggleAudio()" class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-xl sm:rounded-2xl bg-slate-100 hover:bg-slate-200 border border-slate-300 flex items-center justify-center text-sm sm:text-base transition shrink-0" title="צלילים">
+          🔊
+        </button>
+
+        <button onclick="toggleScratchpad()" class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-xl sm:rounded-2xl bg-indigo-100 hover:bg-indigo-200 border-2 border-indigo-300 text-indigo-700 flex items-center justify-center text-sm sm:text-base transition shrink-0" title="לוח טיוטה">
+          ✏️
+        </button>
+
+        <button onclick="shareApp()" class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-xl sm:rounded-2xl bg-emerald-100 hover:bg-emerald-200 border-2 border-emerald-300 text-emerald-800 flex items-center justify-center text-sm sm:text-base transition shrink-0" title="שיתוף קישור">
+          🔗
+        </button>
+
+        <a href="../../index.html" class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-xl sm:rounded-2xl bg-slate-100 hover:bg-slate-200 border border-slate-300 flex items-center justify-center text-sm sm:text-base transition shrink-0" title="חזרה לתפריט הראשי">
+          🏠
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-5xl w-full mx-auto p-3 sm:p-5 md:p-6 flex-grow">
+    
+    <!-- מסך בית: בחירת נושא -->
+    <div id="homeView" class="space-y-5 sm:space-y-6">
+      
+      <!-- Welcome Card -->
+      <div class="relative overflow-hidden bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 text-white rounded-3xl p-5 sm:p-8 shadow-xl border-4 border-indigo-300">
+        <div class="relative z-10 max-w-xl">
+          <span class="inline-block tag-badge bg-white/20 text-white text-[11px] sm:text-sm font-bold px-2.5 py-1 rounded-full uppercase tracking-wider mb-2">שלום לומדים אלופים! 🎒</span>
+          <h2 class="text-xl sm:text-3xl md:text-4xl font-black mb-2 leading-tight">באיזה נושא נתרגל היום?</h2>
+          <p class="text-indigo-100 text-xs sm:text-base font-medium leading-relaxed">
+            בחרו פעילות, פתרו תרגילים עם עזרים חזותיים ובדידים, וצברו כוכבים ושיאים חדשים!
+          </p>
+        </div>
+        <div class="absolute -left-6 -bottom-8 text-8xl sm:text-9xl opacity-25 select-none pointer-events-none">
+          🚀
+        </div>
+      </div>
+
+      <!-- Categories Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+        
+        <!-- כרטיס 1: חיבור וחיסור עד 100 -->
+        <div onclick="startTopic('addsub')" class="cursor-pointer bg-white rounded-3xl p-5 border-4 border-blue-200 hover:border-blue-400 hover:-translate-y-1 transition duration-200 shadow-md group">
+          <div class="w-16 h-14 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center mb-3 group-hover:scale-105 transition text-xl gap-1 shrink-0 px-2">
+            <span>➕</span><span>➖</span>
+          </div>
+          <h3 class="text-lg sm:text-xl font-bold text-blue-950 mb-1">חיבור וחיסור עד 100</h3>
+          <p class="text-xs sm:text-sm text-slate-500 font-medium">תרגילים עד 20, דו-ספרתי עם חד-ספרתי ותרגילי חיסור.</p>
+          <div class="mt-4 flex items-center justify-between text-xs font-bold text-blue-600">
+            <span>תרגול מגוון</span>
+            <span class="text-sm group-hover:translate-x-1 transition">⬅️ התחילו</span>
+          </div>
+        </div>
+
+        <!-- כרטיס 2: עשרות שלמות -->
+        <div onclick="startTopic('tens')" class="cursor-pointer bg-white rounded-3xl p-5 border-4 border-teal-200 hover:border-teal-400 hover:-translate-y-1 transition duration-200 shadow-md group">
+          <div class="w-14 h-14 rounded-2xl bg-teal-100 text-teal-600 text-3xl flex items-center justify-center mb-3 group-hover:scale-105 transition">
+            🔟
+          </div>
+          <h3 class="text-lg sm:text-xl font-bold text-teal-950 mb-1">עשרות שלמות</h3>
+          <p class="text-xs sm:text-sm text-slate-500 font-medium">חיבור וחיסור עשרות שלמות בקלות: 20+30, 80-40 ועוד.</p>
+          <div class="mt-4 flex items-center justify-between text-xs font-bold text-teal-600">
+            <span>קבוצות של 10</span>
+            <span class="text-sm group-hover:translate-x-1 transition">⬅️ התחילו</span>
+          </div>
+        </div>
+
+        <!-- כרטיס 3: כפל למתחילים -->
+        <div onclick="startTopic('mult')" class="cursor-pointer bg-white rounded-3xl p-5 border-4 border-amber-200 hover:border-amber-400 hover:-translate-y-1 transition duration-200 shadow-md group">
+          <div class="w-14 h-14 rounded-2xl bg-amber-100 text-amber-600 text-3xl flex items-center justify-center mb-3 group-hover:scale-105 transition">
+            ✖️
+          </div>
+          <h3 class="text-lg sm:text-xl font-bold text-amber-950 mb-1">כפל למתחילים</h3>
+          <p class="text-xs sm:text-sm text-slate-500 font-medium">כפולות של 2, 5, 10 ו-3 בליווי איורים של קבוצות שוות.</p>
+          <div class="mt-4 flex items-center justify-between text-xs font-bold text-amber-600">
+            <span>כפולות 2, 5, 10</span>
+            <span class="text-sm group-hover:translate-x-1 transition">⬅️ התחילו</span>
+          </div>
+        </div>
+
+        <!-- כרטיס 4: סדרות ודילוגים -->
+        <div onclick="startTopic('sequences')" class="cursor-pointer bg-white rounded-3xl p-5 border-4 border-purple-200 hover:border-purple-400 hover:-translate-y-1 transition duration-200 shadow-md group">
+          <div class="w-14 h-14 rounded-2xl bg-purple-100 text-purple-600 text-3xl flex items-center justify-center mb-3 group-hover:scale-105 transition">
+            🔢
+          </div>
+          <h3 class="text-lg sm:text-xl font-bold text-purple-950 mb-1">סדרות ודילוגים</h3>
+          <p class="text-xs sm:text-sm text-slate-500 font-medium">השלמת מספר חסר בקפיצות של 2, 5 ו-10 ומספרים עוקבים.</p>
+          <div class="mt-4 flex items-center justify-between text-xs font-bold text-purple-600">
+            <span>דילוגים ורצפים</span>
+            <span class="text-sm group-hover:translate-x-1 transition">⬅️ התחילו</span>
+          </div>
+        </div>
+
+        <!-- כרטיס 5: גדול קטן או שווה -->
+        <div onclick="startTopic('compare')" class="cursor-pointer bg-white rounded-3xl p-5 border-4 border-rose-200 hover:border-rose-400 hover:-translate-y-1 transition duration-200 shadow-md group">
+          <div class="w-14 h-14 rounded-2xl bg-rose-100 text-rose-600 text-3xl flex items-center justify-center mb-3 group-hover:scale-105 transition">
+            ⚖️
+          </div>
+          <h3 class="text-lg sm:text-xl font-bold text-rose-950 mb-1">גדול, קטן או שווה?</h3>
+          <p class="text-xs sm:text-sm text-slate-500 font-medium">השוואת מספרים ותרגילים בעזרת סימני &gt; , &lt; ו- =.</p>
+          <div class="mt-4 flex items-center justify-between text-xs font-bold text-rose-600">
+            <span>סימני השוואה</span>
+            <span class="text-sm group-hover:translate-x-1 transition">⬅️ התחילו</span>
+          </div>
+        </div>
+
+        <!-- כרטיס 6: בעיות מילוליות קצרות -->
+        <div onclick="startTopic('words')" class="cursor-pointer bg-white rounded-3xl p-5 border-4 border-emerald-200 hover:border-emerald-400 hover:-translate-y-1 transition duration-200 shadow-md group">
+          <div class="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 text-3xl flex items-center justify-center mb-3 group-hover:scale-105 transition">
+            📖
+          </div>
+          <h3 class="text-lg sm:text-xl font-bold text-emerald-950 mb-1">בעיות מילוליות</h3>
+          <p class="text-xs sm:text-sm text-slate-500 font-medium">סיפורים קצרים מהחיים עם רמזים והמחשות ברורות.</p>
+          <div class="mt-4 flex items-center justify-between text-xs font-bold text-emerald-600">
+            <span>הבנה וחישוב</span>
+            <span class="text-sm group-hover:translate-x-1 transition">⬅️ התחילו</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- מעבדת הבדידים: עשרות ויחידות -->
+      <div class="bg-white border-4 border-indigo-200 rounded-3xl p-5 sm:p-6 shadow-md mt-6">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
+          <div>
+            <h3 class="text-lg sm:text-xl font-black text-indigo-950 flex items-center gap-2">
+              <span>🧱</span> מעבדת הבדידים: עשרות ויחידות
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-500 font-medium">הקלידו מספר או הגרילו כדי לראות כיצד הוא מורכב ממוטות עשרות וקוביות יחידות!</p>
+          </div>
+          <div class="flex items-center gap-2 bg-indigo-50 px-3 py-1.5 rounded-2xl border border-indigo-200">
+            <label for="blockNumberInput" class="text-xs sm:text-sm font-bold text-indigo-900">מספר:</label>
+            <input type="number" id="blockNumberInput" min="1" max="99" value="35" onchange="renderBaseTenBlocks()" class="w-16 text-center font-black text-lg text-indigo-700 bg-white border-2 border-indigo-300 rounded-xl p-1 focus:ring-2 focus:ring-indigo-400 focus:outline-none">
+            <button onclick="randomizeBlocks()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-3 py-1.5 rounded-xl text-xs shadow btn-press">הגרל 🎲</button>
+          </div>
+        </div>
+
+        <div class="bg-slate-50 rounded-2xl p-4 border-2 border-dashed border-slate-300 min-h-[140px] flex flex-col md:flex-row items-center justify-around gap-6">
+          <!-- עשרות -->
+          <div class="flex flex-col items-center">
+            <span class="text-xs font-bold uppercase text-indigo-700 bg-indigo-100 px-3 py-1 rounded-full mb-2" id="tensLabel">3 עשרות (= 30)</span>
+            <div id="tensContainer" class="flex flex-wrap gap-2 items-center justify-center min-h-[70px]"></div>
+          </div>
+
+          <div class="text-2xl text-slate-400 font-bold hidden md:block">+</div>
+
+          <!-- יחידות -->
+          <div class="flex flex-col items-center">
+            <span class="text-xs font-bold uppercase text-amber-700 bg-amber-100 px-3 py-1 rounded-full mb-2" id="onesLabel">5 יחידות (= 5)</span>
+            <div id="onesContainer" class="flex flex-wrap gap-1.5 items-center justify-center max-w-[200px] min-h-[70px]"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- מסך תרגול פעיל -->
+    <div id="exerciseView" class="hidden space-y-5">
+      
+      <!-- Action Bar -->
+      <div class="flex flex-wrap items-center justify-between gap-2 bg-white rounded-2xl p-2.5 sm:p-4 border-2 border-slate-200 shadow-sm">
+        <button onclick="showView('home')" class="flex items-center gap-1 text-slate-600 hover:text-slate-900 font-bold text-xs sm:text-sm bg-slate-100 hover:bg-slate-200 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl transition btn-press shrink-0">
+          <span>➡️</span> תפריט ראשי
+        </button>
+
+        <div class="text-center min-w-0">
+          <span id="topicTitle" class="font-black text-xs sm:text-base md:text-lg text-slate-800 truncate block">נושא</span>
+          <div class="text-[11px] sm:text-xs font-bold text-indigo-600" id="roundProgress">תרגיל 1 מתוך 8</div>
+        </div>
+
+        <button onclick="toggleScratchpad()" class="flex items-center gap-1 text-xs sm:text-sm font-bold bg-indigo-50 text-indigo-700 border border-indigo-200 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl hover:bg-indigo-100 btn-press shrink-0">
+          <span>✏️</span> טיוטה
+        </button>
+      </div>
+
+      <!-- Question Card -->
+      <div class="bg-white rounded-3xl p-6 sm:p-10 border-4 border-indigo-200 shadow-xl relative min-h-[360px] flex flex-col items-center justify-center text-center">
+        
+        <!-- Prompt / Question title -->
+        <div id="questionPrompt" class="text-base sm:text-xl font-bold text-slate-600 mb-3">
+          פתרו את התרגיל:
+        </div>
+
+        <!-- Hint banner -->
+        <div id="questionHint" class="hidden mb-4 bg-amber-50 text-amber-900 border-2 border-amber-200 rounded-2xl px-4 py-2 text-xs sm:text-sm font-semibold flex items-center gap-2 max-w-md">
+          <span class="text-lg">💡</span>
+          <span id="questionHintText">רמז יוצג כאן</span>
+        </div>
+
+        <!-- Visual aid (קבוצות שוות) -->
+        <div id="visualAid" class="mb-5 flex flex-wrap gap-2 justify-center items-center"></div>
+
+        <!-- מיכל המשוואה: מוגדר ב-LTR מוחלט: תרגיל משמאל = תוצאה בימין -->
+        <div class="my-4 p-4 sm:p-6 bg-slate-50 border-2 border-dashed border-indigo-200 rounded-3xl w-fit max-w-full">
+          <div id="equationBox" class="math-ltr-box text-3xl sm:text-5xl font-black text-slate-800 tracking-wider">
+            <!-- התוכן מוזרק דינמית עם שמירה על LTR -->
+          </div>
+        </div>
+
+        <!-- כפתורי בחירה (Options) -->
+        <div id="answerArea" class="w-full max-w-md mt-4"></div>
+
+        <!-- Feedback message -->
+        <div id="feedbackBox" class="mt-5 font-black text-lg sm:text-xl min-h-[34px] flex items-center justify-center gap-2"></div>
+      </div>
+
+      <!-- כפתורי עזר -->
+      <div class="flex justify-between items-center px-2">
+        <button onclick="showHint()" class="text-amber-800 hover:text-amber-900 bg-amber-100 hover:bg-amber-200 font-bold px-4 py-2 rounded-2xl text-xs sm:text-sm transition btn-press flex items-center gap-1">
+          💡 זקוקים לרמז?
+        </button>
+        <button onclick="nextQuestion(true)" class="text-slate-500 hover:text-slate-800 font-bold px-4 py-2 rounded-2xl text-xs sm:text-sm transition hover:bg-slate-100 btn-press">
+          דלג לשאלה הבאה ⏭️
+        </button>
+      </div>
+
+    </div>
+
+    <!-- מסך סיכום וסיום סבב -->
+    <div id="summaryView" class="hidden bg-white rounded-3xl p-8 border-4 border-emerald-300 shadow-2xl text-center max-w-md mx-auto space-y-6">
+      <div class="text-7xl animate-bounce-gentle">🏆</div>
+      <div>
+        <h2 class="text-3xl font-black text-slate-800 mb-1">כל הכבוד, אלופים!</h2>
+        <p class="text-slate-600 font-medium">סיימתם בהצלחה את התרגול!</p>
+      </div>
+
+      <div class="bg-emerald-50 rounded-2xl p-4 border-2 border-emerald-200 flex justify-around items-center">
+        <div>
+          <span class="block text-xs font-bold text-slate-500">תשובות נכונות</span>
+          <span id="summaryCorrect" class="text-3xl font-black text-emerald-600">8/8</span>
+        </div>
+        <div class="w-px h-10 bg-emerald-200"></div>
+        <div>
+          <span class="block text-xs font-bold text-slate-500">כוכבים שקיבלתם</span>
+          <span id="summaryStars" class="text-3xl font-black text-amber-500">⭐ +16</span>
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        <button onclick="restartTopic()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-black py-3.5 px-6 rounded-2xl shadow-lg border-b-4 border-emerald-700 btn-press text-lg">
+          תרגול נוסף בנושא זה 🔄
+        </button>
+        <button onclick="showView('home')" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 px-6 rounded-2xl btn-press text-sm">
+          חזרה לתפריט הראשי 🏠
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- מודל טיוטה וציור -->
+  <div id="scratchpadModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden">
+    <div class="bg-white w-full max-w-2xl rounded-3xl border-4 border-indigo-400 shadow-2xl flex flex-col overflow-hidden">
+      <div class="bg-indigo-600 text-white px-5 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-2 font-black text-base">
+          <span>✏️</span>
+          <span>לוח טיוטה וציור לחישובים</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="clearScratchpad()" class="bg-indigo-700 hover:bg-indigo-800 text-white text-xs font-bold px-3 py-1.5 rounded-xl btn-press">
+            נקה הכל 🗑️
+          </button>
+          <button onclick="toggleScratchpad()" class="text-white hover:bg-indigo-700 rounded-xl w-8 h-8 flex items-center justify-center font-bold text-lg">
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <div class="relative bg-amber-50/50 cursor-crosshair">
+        <canvas id="scratchCanvas" class="w-full h-80 touch-none"></canvas>
+      </div>
+
+      <div class="bg-slate-100 p-3 flex items-center justify-between border-t border-slate-200">
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-bold text-slate-600">צבע:</span>
+          <button onclick="setPenColor('#2563eb')" class="w-7 h-7 rounded-full bg-blue-600 border-2 border-white shadow"></button>
+          <button onclick="setPenColor('#dc2626')" class="w-7 h-7 rounded-full bg-red-600 border-2 border-white shadow"></button>
+          <button onclick="setPenColor('#16a34a')" class="w-7 h-7 rounded-full bg-green-600 border-2 border-white shadow"></button>
+          <button onclick="setPenColor('#1e293b')" class="w-7 h-7 rounded-full bg-slate-800 border-2 border-white shadow"></button>
+        </div>
+        <span class="text-xs text-slate-500 font-semibold">אפשר לצייר עם האצבע או עם העכבר!</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-white/80 border-t border-slate-200 py-3 px-4 text-center text-xs text-slate-500 font-bold flex flex-wrap items-center justify-center gap-2">
+    <span>מתמטיקה לכיתה ב' ✨ למידה מעצימה, חווייתית ובטוחה</span>
+    <span class="text-slate-300 hidden sm:inline">•</span>
+    <span class="bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded-full border border-slate-200 font-medium text-[11px]">גרסה 2.0</span>
+  </footer>
+
+  <!-- Toast הודעת שיתוף והעתקה -->
+  <div id="shareToast" class="fixed bottom-5 left-1/2 -translate-x-1/2 bg-slate-900/90 text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-2xl shadow-xl z-50 flex items-center gap-2 transition-all duration-300 opacity-0 pointer-events-none translate-y-3">
+    <span>📋</span>
+    <span id="shareToastText">הקישור הועתק בהצלחה! שתפו בוואטסאפ של הכיתה 🎒</span>
+  </div>
+
+  <script>
+    // State
+    const state = {
+      stars: 0,
+      streak: 0,
+      soundEnabled: true,
+      currentTopic: 'addsub',
+      questionIndex: 0,
+      totalQuestions: 8,
+      correctCount: 0,
+      currentQuestion: null,
+      isAnswering: false
+    };
+
+    try {
+      const saved = localStorage.getItem('grade2_math_stars');
+      if (saved) state.stars = parseInt(saved, 10) || 0;
+    } catch(e) {}
+
+    // Web Audio Synthesizer
+    let audioCtx = null;
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function playSound(type) {
+      if (!state.soundEnabled) return;
+      try {
+        initAudio();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const now = audioCtx.currentTime;
+
+        if (type === 'correct') {
+          const osc1 = audioCtx.createOscillator();
+          const osc2 = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+
+          osc1.type = 'triangle';
+          osc2.type = 'triangle';
+          osc1.frequency.setValueAtTime(523.25, now); // C5
+          osc1.frequency.setValueAtTime(659.25, now + 0.1); // E5
+          osc2.frequency.setValueAtTime(783.99, now + 0.1); // G5
+
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+
+          osc1.connect(gain);
+          osc2.connect(gain);
+          gain.connect(audioCtx.destination);
+
+          osc1.start(now);
+          osc2.start(now);
+          osc1.stop(now + 0.4);
+          osc2.stop(now + 0.4);
+        } else if (type === 'wrong') {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(240, now);
+          osc.frequency.setValueAtTime(190, now + 0.15);
+
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.35);
+        } else if (type === 'click') {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(440, now);
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.06);
+        } else if (type === 'fanfare') {
+          const notes = [523.25, 659.25, 783.99, 1046.50];
+          notes.forEach((f, idx) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(f, now + idx * 0.12);
+            gain.gain.setValueAtTime(0.15, now + idx * 0.12);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.12 + 0.35);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now + idx * 0.12);
+            osc.stop(now + idx * 0.12 + 0.35);
+          });
+        }
+      } catch (err) {}
+    }
+
+    function toggleAudio() {
+      state.soundEnabled = !state.soundEnabled;
+      document.getElementById('soundToggle').innerText = state.soundEnabled ? '🔊' : '🔇';
+      playSound('click');
+    }
+
+    function shareApp() {
+      playSound('click');
+      const shareData = {
+        title: "אלופי החשבון - כיתה ב' 🎒",
+        text: "בואו לתרגל חשבון לכיתה ב' - חיבור, חיסור, כפל, בדידים ולוח טיוטה אינטראקטיבי!",
+        url: window.location.href
+      };
+
+      if (navigator.share) {
+        navigator.share(shareData).catch(() => copyLinkFallback());
+      } else {
+        copyLinkFallback();
+      }
+    }
+
+    function copyLinkFallback() {
+      const dummy = document.createElement('textarea');
+      dummy.value = window.location.href;
+      document.body.appendChild(dummy);
+      dummy.select();
+      try {
+        document.execCommand('copy');
+        showShareToast("הקישור הועתק ללוח! אפשר להדביק בוואטסאפ של הכיתה 🎒");
+      } catch(err) {
+        showShareToast("הקישור: " + window.location.href);
+      }
+      document.body.removeChild(dummy);
+    }
+
+    function showShareToast(text) {
+      const toast = document.getElementById('shareToast');
+      const toastText = document.getElementById('shareToastText');
+      if (text) toastText.innerText = text;
+      toast.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-3');
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'pointer-events-none', 'translate-y-3');
+      }, 3000);
+    }
+
+    function rnd(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function shuffle(arr) {
+      return [...arr].sort(() => Math.random() - 0.5);
+    }
+
+    function generateQuestion(topic) {
+      const q = {
+        prompt: 'פתרו את התרגיל:',
+        eqHtml: '',
+        options: [],
+        correctAnswer: null,
+        hint: '',
+        visual: ''
+      };
+
+      if (topic === 'addsub') {
+        const isAdd = Math.random() > 0.45;
+        if (isAdd) {
+          const subType = rnd(0, 1);
+          if (subType === 0) {
+            const a = rnd(5, 14);
+            const b = rnd(2, 20 - a);
+            const ans = a + b;
+            q.prompt = 'פתרו את תרגיל החיבור:';
+            q.eqHtml = `<span>${a}</span> <span>+</span> <span>${b}</span> <span>=</span> <span class="answer-slot bg-indigo-100 text-indigo-700 px-4 py-1 rounded-2xl border-2 border-indigo-300">?</span>`;
+            q.correctAnswer = ans;
+            q.hint = `התחילו מ-${a} וספרו עוד ${b} קדימה!`;
+          } else {
+            const tens = rnd(2, 7) * 10;
+            const ones = rnd(1, 5);
+            const a = tens + ones;
+            const b = rnd(2, 4);
+            const ans = a + b;
+            q.prompt = 'פתרו את התרגיל:';
+            q.eqHtml = `<span>${a}</span> <span>+</span> <span>${b}</span> <span>=</span> <span class="answer-slot bg-indigo-100 text-indigo-700 px-4 py-1 rounded-2xl border-2 border-indigo-300">?</span>`;
+            q.correctAnswer = ans;
+            q.hint = `חברו תחילה את היחידות: ${ones} + ${b} = ${ones+b}, והוסיפו את ה-${tens}.`;
+          }
+        } else {
+          const a = rnd(12, 20);
+          const b = rnd(2, 8);
+          const ans = a - b;
+          q.prompt = 'פתרו את תרגיל החיסור:';
+          q.eqHtml = `<span>${a}</span> <span>-</span> <span>${b}</span> <span>=</span> <span class="answer-slot bg-indigo-100 text-indigo-700 px-4 py-1 rounded-2xl border-2 border-indigo-300">?</span>`;
+          q.correctAnswer = ans;
+          q.hint = `כמה נשאר כאשר מורידים ${b} מתוך ${a}?`;
+        }
+      } 
+      else if (topic === 'tens') {
+        const isAdd = Math.random() > 0.4;
+        const tensA = rnd(1, 6) * 10;
+        const tensB = rnd(1, 3) * 10;
+
+        if (isAdd) {
+          const ans = tensA + tensB;
+          q.prompt = 'חישוב בעשרות שלמות:';
+          q.eqHtml = `<span>${tensA}</span> <span>+</span> <span>${tensB}</span> <span>=</span> <span class="answer-slot bg-teal-100 text-teal-800 px-4 py-1 rounded-2xl border-2 border-teal-300">?</span>`;
+          q.correctAnswer = ans;
+          q.hint = `חשבו בעשרות: ${tensA/10} עשרות + ${tensB/10} עשרות = ${(tensA+tensB)/10} עשרות!`;
+        } else {
+          const big = Math.max(tensA, tensB);
+          const small = Math.min(tensA, tensB);
+          const ans = big - small;
+          q.prompt = 'חישוב בעשרות שלמות:';
+          q.eqHtml = `<span>${big}</span> <span>-</span> <span>${small}</span> <span>=</span> <span class="answer-slot bg-teal-100 text-teal-800 px-4 py-1 rounded-2xl border-2 border-teal-300">?</span>`;
+          q.correctAnswer = ans;
+          q.hint = `חשבו: ${big/10} עשרות פחות ${small/10} עשרות = ${ans/10} עשרות.`;
+        }
+      }
+      else if (topic === 'mult') {
+        const tables = [2, 5, 10, 3];
+        const b = tables[rnd(0, tables.length - 1)];
+        const a = rnd(2, 6);
+        const ans = a * b;
+
+        q.prompt = `כמה זה ${a} פעמים ${b}?`;
+        q.eqHtml = `<span>${a}</span> <span>×</span> <span>${b}</span> <span>=</span> <span class="answer-slot bg-amber-100 text-amber-800 px-4 py-1 rounded-2xl border-2 border-amber-300">?</span>`;
+        q.correctAnswer = ans;
+        q.hint = `אפשר לחשב בדילוגים של ${b}, או לחבר את ${b} בעצמו ${a} פעמים!`;
+
+        let groupsHtml = '<div class="flex flex-wrap gap-2.5 justify-center items-center">';
+        const icons = ['🍎', '⭐', '🎈', '🐸', '🍪'];
+        const icon = icons[rnd(0, icons.length - 1)];
+        for (let g = 0; g < a; g++) {
+          groupsHtml += `<div class="bg-amber-50 border-2 border-amber-300 rounded-2xl px-2 py-1 text-sm sm:text-base font-bold flex items-center gap-1 shadow-sm">${icon.repeat(Math.min(b, 5))}</div>`;
+        }
+        groupsHtml += '</div>';
+        q.visual = groupsHtml;
+      }
+      else if (topic === 'sequences') {
+        const step = [2, 5, 10, 1][rnd(0, 3)];
+        const start = rnd(2, 30);
+        const seq = [start, start + step, start + step * 2, start + step * 3];
+        const missingIdx = rnd(1, 3);
+        const ans = seq[missingIdx];
+        seq[missingIdx] = '?';
+
+        q.prompt = `מהו המספר החסר בסדרה? (בקפיצות של ${step})`;
+        q.eqHtml = `<span class="tracking-widest">${seq.map(n => n === '?' ? '<span class="answer-slot bg-purple-100 text-purple-800 px-3 py-1 rounded-xl border-2 border-purple-300">?</span>' : n).join(' , ')}</span>`;
+        q.correctAnswer = ans;
+        q.hint = `שימו לב: כל מספר גדל בדיוק ב-${step}!`;
+      }
+      else if (topic === 'compare') {
+        const left = rnd(10, 95);
+        let right = left;
+        const roll = rnd(1, 3);
+        if (roll === 1) right = left + rnd(1, 12);
+        if (roll === 2) right = Math.max(1, left - rnd(1, 12));
+
+        let sign = '=';
+        if (left > right) sign = '>';
+        if (left < right) sign = '<';
+
+        q.prompt = 'בחרו את הסימן הנכון (> , < או =):';
+        q.eqHtml = `<span>${left}</span> <span class="answer-slot bg-rose-100 text-rose-800 px-4 py-1 rounded-2xl border-2 border-rose-300">?</span> <span>${right}</span>`;
+        q.correctAnswer = sign;
+        q.hint = 'זכרו: פתח התנין תמיד פונה אל המספר הגדול יותר!';
+        q.options = ['>', '<', '='];
+      }
+      else if (topic === 'words') {
+        const scenarios = [
+          {
+            t: (a, b) => `לנועה היו ${a} מדבקות ⭐️. היא קיבלה מחברתה עוד ${b} מדבקות. כמה מדבקות יש לנועה כעת?`,
+            calc: (a, b) => ({ a, b, op: '+', ans: a + b }),
+            h: 'מחברים את המדבקות שהיו עם המדבקות החדשות.'
+          },
+          {
+            t: (a, b) => `בסלסלה היו ${a} תפוחים 🍏. הילדים אכלו ${b} תפוחים. כמה תפוחים נשארו בסלסלה?`,
+            calc: (a, b) => {
+              const big = Math.max(a, b);
+              const small = Math.min(a, b);
+              return { a: big, b: small, op: '-', ans: big - small };
+            },
+            h: 'תרגיל חיסור: התפוחים שהיו פחות התפוחים שנאכלו.'
+          },
+          {
+            t: (a, b) => `יונתן סידר ${a} צלחות 🍽️. על כל צלחת הוא הניח בדיוק ${b} עוגיות 🍪. כמה עוגיות יש בסך הכל?`,
+            calc: (a, b) => ({ a, b, op: '×', ans: a * b }),
+            h: 'זהו תרגיל כפל: מספר הצלחות כפול כמות העוגיות בכל צלחת.'
+          }
+        ];
+
+        const sc = scenarios[rnd(0, scenarios.length - 1)];
+        const n1 = rnd(3, 12);
+        const n2 = rnd(2, 6);
+        const data = sc.calc(n1, n2);
+
+        q.prompt = sc.t(data.a, data.b);
+        q.eqHtml = `<span>${data.a}</span> <span>${data.op}</span> <span>${data.b}</span> <span>=</span> <span class="answer-slot bg-emerald-100 text-emerald-800 px-4 py-1 rounded-2xl border-2 border-emerald-300">?</span>`;
+        q.correctAnswer = data.ans;
+        q.hint = sc.h;
+      }
+
+      if (!q.options || q.options.length === 0) {
+        const ans = q.correctAnswer;
+        const set = new Set([ans]);
+        while (set.size < 4) {
+          let delta = rnd(-4, 4);
+          if (delta === 0) delta = 1;
+          if (Math.random() > 0.5) delta = (Math.random() > 0.5 ? 10 : -10);
+          const fake = ans + delta;
+          if (fake >= 0) set.add(fake);
+        }
+        q.options = shuffle(Array.from(set));
+      }
+
+      return q;
+    }
+
+    function showView(view) {
+      document.getElementById('homeView').classList.toggle('hidden', view !== 'home');
+      document.getElementById('exerciseView').classList.toggle('hidden', view !== 'exercise');
+      document.getElementById('summaryView').classList.toggle('hidden', view !== 'summary');
+
+      if (view === 'home') {
+        renderBaseTenBlocks();
+      }
+    }
+
+    function startTopic(topic) {
+      playSound('click');
+      state.currentTopic = topic;
+      state.questionIndex = 0;
+      state.correctCount = 0;
+      state.totalQuestions = 8;
+
+      const titles = {
+        addsub: 'חיבור וחיסור עד 100 ➕➖',
+        tens: 'עשרות שלמות 🔟',
+        mult: 'כפל למתחילים: קבוצות שוות ✖️',
+        sequences: 'סדרות ודילוגים 🔢',
+        compare: 'גדול, קטן או שווה? ⚖️',
+        words: 'בעיות מילוליות מאוירות 📖'
+      };
+      document.getElementById('topicTitle').innerText = titles[topic] || 'תרגול מתמטיקה';
+
+      showView('exercise');
+      renderNextQuestion();
+    }
+
+    function restartTopic() {
+      startTopic(state.currentTopic);
+    }
+
+    function renderNextQuestion() {
+      state.isAnswering = false;
+      document.getElementById('questionHint').classList.add('hidden');
+      document.getElementById('feedbackBox').innerHTML = '';
+      document.getElementById('roundProgress').innerText = `שאלה ${state.questionIndex + 1} מתוך ${state.totalQuestions}`;
+
+      state.currentQuestion = generateQuestion(state.currentTopic);
+      const q = state.currentQuestion;
+
+      document.getElementById('questionPrompt').innerText = q.prompt;
+      document.getElementById('equationBox').innerHTML = q.eqHtml;
+
+      const visualAidEl = document.getElementById('visualAid');
+      if (q.visual) {
+        visualAidEl.innerHTML = q.visual;
+        visualAidEl.classList.remove('hidden');
+      } else {
+        visualAidEl.innerHTML = '';
+        visualAidEl.classList.add('hidden');
+      }
+
+      const answerArea = document.getElementById('answerArea');
+      answerArea.innerHTML = '';
+
+      if (state.currentTopic === 'compare') {
+        const grid = document.createElement('div');
+        grid.className = 'grid grid-cols-3 gap-3';
+
+        const symData = [
+          { sym: '>', text: 'גדול מ-' },
+          { sym: '=', text: 'שווה ל-' },
+          { sym: '<', text: 'קטן מ-' }
+        ];
+
+        symData.forEach(item => {
+          const btn = document.createElement('button');
+          btn.className = 'bg-white hover:bg-rose-50 border-4 border-rose-300 hover:border-rose-400 text-rose-700 rounded-2xl p-4 flex flex-col items-center justify-center font-black text-3xl shadow btn-press';
+          btn.innerHTML = `<span>${item.sym}</span><span class="text-xs text-slate-500 font-bold mt-1">${item.text}</span>`;
+          btn.onclick = () => checkAnswer(item.sym, btn);
+          grid.appendChild(btn);
+        });
+        answerArea.appendChild(grid);
+      } else {
+        const grid = document.createElement('div');
+        grid.className = 'grid grid-cols-2 gap-3 sm:gap-4';
+
+        const colorClasses = [
+          'border-blue-300 hover:border-blue-500 text-blue-900 hover:bg-blue-50',
+          'border-emerald-300 hover:border-emerald-500 text-emerald-900 hover:bg-emerald-50',
+          'border-purple-300 hover:border-purple-500 text-purple-900 hover:bg-purple-50',
+          'border-amber-300 hover:border-amber-500 text-amber-900 hover:bg-amber-50'
+        ];
+
+        q.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.className = `bg-white border-4 ${colorClasses[idx % colorClasses.length]} rounded-2xl py-4 px-3 font-black text-2xl sm:text-3xl shadow-sm btn-press flex items-center justify-center transition`;
+          btn.innerText = opt;
+          btn.onclick = () => checkAnswer(opt, btn);
+          grid.appendChild(btn);
+        });
+        answerArea.appendChild(grid);
+      }
+    }
+
+    function checkAnswer(selected, buttonElement) {
+      if (state.isAnswering) return;
+      state.isAnswering = true;
+
+      const q = state.currentQuestion;
+      const isCorrect = (String(selected) === String(q.correctAnswer));
+      const feedbackBox = document.getElementById('feedbackBox');
+      const answerSlot = document.querySelector('.answer-slot');
+
+      const allButtons = document.querySelectorAll('#answerArea button');
+      allButtons.forEach(b => b.disabled = true);
+
+      if (isCorrect) {
+        playSound('correct');
+        buttonElement.classList.remove('bg-white');
+        buttonElement.classList.add('bg-emerald-500', 'text-white', 'border-emerald-600', 'scale-105');
+
+        if (answerSlot) {
+          answerSlot.innerText = selected;
+          answerSlot.classList.remove('bg-indigo-100', 'bg-teal-100', 'bg-amber-100', 'bg-purple-100', 'bg-rose-100', 'bg-emerald-100');
+          answerSlot.classList.add('bg-emerald-100', 'text-emerald-700', 'border-emerald-400');
+        }
+
+        state.stars += 2;
+        state.streak++;
+        state.correctCount++;
+
+        if (state.streak % 3 === 0 && window.confetti) {
+          confetti({
+            particleCount: 45,
+            spread: 60,
+            origin: { y: 0.65 }
+          });
+        }
+
+        const praises = ['כל הכבוד! 🎉', 'מצוין! ⭐', 'אלופים אמיתיים! 🚀', 'תשובה מדויקת! 🌟'];
+        const praise = praises[Math.floor(Math.random() * praises.length)];
+        feedbackBox.innerHTML = `<span class="text-emerald-600">${praise} (+2 כוכבים)</span>`;
+
+        updateStatsUI();
+
+        setTimeout(() => {
+          nextQuestion(false);
+        }, 1200);
+
+      } else {
+        playSound('wrong');
+        buttonElement.classList.remove('bg-white');
+        buttonElement.classList.add('bg-rose-500', 'text-white', 'border-rose-600', 'animate-wiggle');
+        state.streak = 0;
+        updateStatsUI();
+
+        allButtons.forEach(b => {
+          if (String(b.innerText).trim().startsWith(String(q.correctAnswer))) {
+            b.classList.add('bg-emerald-100', 'border-emerald-500', 'text-emerald-800');
+          }
+        });
+
+        feedbackBox.innerHTML = `<span class="text-rose-600">התשובה הנכונה היא ${q.correctAnswer}. לומדים מטעויות! 💪</span>`;
+
+        setTimeout(() => {
+          nextQuestion(false);
+        }, 2000);
+      }
+    }
+
+    function nextQuestion(skipped = false) {
+      if (skipped) {
+        playSound('click');
+        state.streak = 0;
+        updateStatsUI();
+      }
+
+      state.questionIndex++;
+      if (state.questionIndex >= state.totalQuestions) {
+        finishRound();
+      } else {
+        renderNextQuestion();
+      }
+    }
+
+    function showHint() {
+      playSound('click');
+      const hintBox = document.getElementById('questionHint');
+      const hintText = document.getElementById('questionHintText');
+      hintText.innerText = state.currentQuestion.hint || 'היעזרו בלוח הטיוטה כדי לחשב!';
+      hintBox.classList.remove('hidden');
+    }
+
+    function finishRound() {
+      playSound('fanfare');
+      if (window.confetti) {
+        confetti({
+          particleCount: 100,
+          spread: 80,
+          origin: { y: 0.5 }
+        });
+      }
+
+      const bonusStars = state.correctCount * 2 + 4;
+      state.stars += 4;
+      updateStatsUI();
+
+      document.getElementById('summaryCorrect').innerText = `${state.correctCount}/${state.totalQuestions}`;
+      document.getElementById('summaryStars').innerText = `⭐ +${bonusStars}`;
+      showView('summary');
+    }
+
+    function updateStatsUI() {
+      document.getElementById('starsCount').innerText = state.stars;
+      document.getElementById('streakCount').innerText = state.streak;
+      try {
+        localStorage.setItem('grade2_math_stars', state.stars);
+      } catch(e) {}
+    }
+
+    function renderBaseTenBlocks() {
+      const input = document.getElementById('blockNumberInput');
+      let val = parseInt(input.value, 10);
+      if (isNaN(val) || val < 1) val = 1;
+      if (val > 99) val = 99;
+      input.value = val;
+
+      const tens = Math.floor(val / 10);
+      const ones = val % 10;
+
+      document.getElementById('tensLabel').innerText = `${tens} עשרות (= ${tens * 10})`;
+      document.getElementById('onesLabel').innerText = `${ones} יחידות (= ${ones})`;
+
+      const tensContainer = document.getElementById('tensContainer');
+      tensContainer.innerHTML = '';
+      for (let i = 0; i < tens; i++) {
+        const rod = document.createElement('div');
+        rod.className = 'w-6 h-24 bg-gradient-to-t from-indigo-600 to-indigo-400 border border-indigo-700 rounded shadow flex flex-col justify-between p-0.5';
+        for (let b = 0; b < 10; b++) {
+          const tick = document.createElement('div');
+          tick.className = 'h-1.5 border-b border-indigo-200/50';
+          rod.appendChild(tick);
+        }
+        tensContainer.appendChild(rod);
+      }
+      if (tens === 0) {
+        tensContainer.innerHTML = '<span class="text-xs text-slate-400 font-bold">0 עשרות</span>';
+      }
+
+      const onesContainer = document.getElementById('onesContainer');
+      onesContainer.innerHTML = '';
+      for (let i = 0; i < ones; i++) {
+        const cube = document.createElement('div');
+        cube.className = 'w-5 h-5 bg-gradient-to-tr from-amber-500 to-amber-300 border border-amber-600 rounded shadow flex items-center justify-center text-[9px] text-amber-950 font-black';
+        cube.innerText = '1';
+        onesContainer.appendChild(cube);
+      }
+      if (ones === 0) {
+        onesContainer.innerHTML = '<span class="text-xs text-slate-400 font-bold">0 יחידות</span>';
+      }
+    }
+
+    function randomizeBlocks() {
+      playSound('click');
+      const rand = Math.floor(Math.random() * 89) + 10;
+      document.getElementById('blockNumberInput').value = rand;
+      renderBaseTenBlocks();
+    }
+
+    const canvas = document.getElementById('scratchCanvas');
+    const ctx = canvas.getContext('2d');
+    let isDrawing = false;
+    let penColor = '#2563eb';
+
+    function resizeCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = 320;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = penColor;
+    }
+
+    function setPenColor(color) {
+      playSound('click');
+      penColor = color;
+      ctx.strokeStyle = penColor;
+    }
+
+    function clearScratchpad() {
+      playSound('click');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function toggleScratchpad() {
+      playSound('click');
+      const modal = document.getElementById('scratchpadModal');
+      const isHidden = modal.classList.toggle('hidden');
+      if (!isHidden) {
+        setTimeout(resizeCanvas, 50);
+      }
+    }
+
+    function getCoords(e) {
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return {
+        x: clientX - rect.left,
+        y: clientY - rect.top
+      };
+    }
+
+    canvas.addEventListener('mousedown', (e) => {
+      isDrawing = true;
+      const { x, y } = getCoords(e);
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+      if (!isDrawing) return;
+      const { x, y } = getCoords(e);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+    });
+
+    window.addEventListener('mouseup', () => { isDrawing = false; });
+
+    canvas.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      isDrawing = true;
+      const { x, y } = getCoords(e);
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+    }, { passive: false });
+
+    canvas.addEventListener('touchmove', (e) => {
+      if (!isDrawing) return;
+      e.preventDefault();
+      const { x, y } = getCoords(e);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+    }, { passive: false });
+
+    canvas.addEventListener('touchend', () => { isDrawing = false; });
+
+    window.onload = function () {
+      updateStatsUI();
+      renderBaseTenBlocks();
+    };
+  </script>
+</body>
+</html>
