@@ -21,8 +21,3 @@
 * **Commit Message Format:**
   * Brief, clear subject line (imperative mood, e.g. `feat: add ...`, `fix: ...`).
   * Followed by a blank line and a brief body description when possible, highlighting key rationale or details without repeating the subject line.
-
-## Tool & Command Permissions
-* **Always Allowed Commands & APIs:**
-  * Always allow running `curl.exe` commands.
-  * Always allow network requests and API queries to `https://api.github.com` and related GitHub endpoints.
