@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <title>אלופי החשבון - כיתה ו' 🚀 | אחוזים, שברים ומספרים מכוונים</title>
+
+  <!-- Open Graph / Meta -->
+  <meta name="description" content="אלופי החשבון לכיתה ו' - תרגול אינטראקטיבי מתקדם באחוזים, שברים, מספרים מכוונים, יחס ופרופורציה, גאומטריה ובעיות מילוליות!">
+  <meta property="og:title" content="אלופי החשבון - כיתה ו' 🚀">
+  <meta property="og:description" content="אתגר מתמטיקה מתקדם לכיתה ו': אחוזים, שברים, מספרים שליליים, יחס ובעיות מילוליות!">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=1200&auto=format&fit=crop">
+  <meta name="theme-color" content="#064e3b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
+
+  <!-- Tailwind CSS & Confetti CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800;900&family=Varela+Round&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --sat: env(safe-area-inset-top, 0px);
+      --sab: env(safe-area-inset-bottom, 0px);
+    }
+    * {
+      font-family: 'Rubik', 'Varela Round', sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      padding-top: var(--sat);
+      padding-bottom: var(--sab);
+    }
+    .math-ltr-box {
+      direction: ltr !important;
+      unicode-bidi: isolate;
+      text-align: center;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .math-font {
+      font-feature-settings: "tnum";
+      font-variant-numeric: tabular-nums;
+    }
+    .cyber-card {
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(6, 78, 59, 0.25) 100%);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .cyber-card:hover {
+      border-color: rgba(52, 211, 153, 0.6);
+    }
+    @keyframes pulseSoft {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.04); opacity: 0.9; }
+    }
+    .animate-pulse-soft {
+      animation: pulseSoft 2s ease-in-out infinite;
+    }
+    @keyframes shakeErr {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+    .shake {
+      animation: shakeErr 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    }
+  </style>
+</head>
+
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-emerald-500 selection:text-white">
+
+  <!-- Header -->
+  <header class="w-full bg-slate-900/90 backdrop-blur-md border-b border-emerald-500/30 sticky top-0 z-30 px-3 sm:px-4 py-2.5 transition-all">
+    <div class="max-w-4xl mx-auto flex items-center justify-between gap-2">
+      
+      <!-- Brand & Grade -->
+      <div class="flex items-center gap-2.5">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-xl shadow-lg shadow-emerald-500/20 shrink-0">
+          🚀
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <h1 class="font-black text-base sm:text-lg text-white">אלופי החשבון</h1>
+            <span class="text-[11px] sm:text-xs bg-emerald-500/30 text-emerald-300 font-bold px-2 py-0.5 rounded-full border border-emerald-500/40">
+              כיתה ו'
+            </span>
+            <span class="text-[10px] font-mono bg-teal-500/20 text-teal-300 px-1.5 py-0.5 rounded-md border border-teal-500/30 hidden xs:inline">
+              הכנה לחטיבה
+            </span>
+          </div>
+          <p class="text-[11px] text-slate-400 hidden sm:block">אחוזים, מספרים מכוונים, שברים ויחס</p>
+        </div>
+      </div>
+
+      <!-- Stats Bar & Actions -->
+      <div class="flex items-center gap-1.5 sm:gap-2 bg-slate-900/80 px-2.5 py-1 rounded-2xl border border-slate-800 text-xs sm:text-sm">
+        
+        <!-- Streak -->
+        <div class="flex items-center gap-1 text-amber-400" title="רצף הצלחות">
+          <span>🔥</span>
+          <span id="streakCount" class="font-black math-font">0</span>
+        </div>
+
+        <div class="h-3.5 w-px bg-slate-700"></div>
+
+        <!-- Score -->
+        <div class="flex items-center gap-1 text-emerald-400" title="ניקוד מצטבר">
+          <span>⭐</span>
+          <span id="scoreCount" class="font-black math-font">0</span>
+        </div>
+
+        <div class="h-3.5 w-px bg-slate-700"></div>
+
+        <!-- Timer Toggle -->
+        <button id="timerToggleBtn" onclick="toggleTimerMode()" class="p-1 hover:text-emerald-400 transition" title="טיימר אתגר">
+          ⏱️ <span id="timerDisplay" class="font-mono text-[11px] hidden">60</span>
+        </button>
+
+        <div class="h-3.5 w-px bg-slate-700"></div>
+
+        <!-- Sound Toggle -->
+        <button id="soundToggleBtn" onclick="toggleSound()" class="p-1 hover:scale-110 transition" title="צלילים">
+          🔊
+        </button>
+
+        <div class="h-3.5 w-px bg-slate-700"></div>
+
+        <!-- Scratchpad -->
+        <button onclick="toggleScratchpad()" class="p-1 hover:scale-110 text-emerald-300 transition" title="לוח טיוטה וחישוב">
+          ✏️
+        </button>
+
+        <div class="h-3.5 w-px bg-slate-700"></div>
+
+        <!-- Home -->
+        <a href="../../index.html" class="p-1 text-slate-300 hover:text-white transition" title="חזרה לתפריט המשחקים">
+          🏠
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Game Area -->
+  <main class="max-w-2xl w-full mx-auto px-3 sm:px-4 py-3 sm:py-6 flex-1 flex flex-col items-center justify-start gap-3 sm:gap-5">
+
+    <!-- Categories Selector -->
+    <div class="w-full bg-slate-900/80 p-1.5 rounded-2xl border border-slate-800 grid grid-cols-3 sm:grid-cols-6 gap-1 text-xs font-semibold shadow-md">
+      <button data-cat="all" onclick="setCategory('all')" class="cat-btn py-1.5 px-2 rounded-xl bg-emerald-600 text-white flex items-center justify-center gap-1 transition">
+        <span>✨</span><span>הכל</span>
+      </button>
+      <button data-cat="percent" onclick="setCategory('percent')" class="cat-btn py-1.5 px-2 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 flex items-center justify-center gap-1 transition">
+        <span>%</span><span>אחוזים</span>
+      </button>
+      <button data-cat="negatives" onclick="setCategory('negatives')" class="cat-btn py-1.5 px-2 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 flex items-center justify-center gap-1 transition">
+        <span>±</span><span>מכוונים</span>
+      </button>
+      <button data-cat="fractions" onclick="setCategory('fractions')" class="cat-btn py-1.5 px-2 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 flex items-center justify-center gap-1 transition">
+        <span>½</span><span>שברים</span>
+      </button>
+      <button data-cat="ratios" onclick="setCategory('ratios')" class="cat-btn py-1.5 px-2 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 flex items-center justify-center gap-1 transition">
+        <span>⚖️</span><span>יחס</span>
+      </button>
+      <button data-cat="geometry" onclick="setCategory('geometry')" class="cat-btn py-1.5 px-2 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 flex items-center justify-center gap-1 transition">
+        <span>📐</span><span>גאומטריה</span>
+      </button>
+    </div>
+
+    <!-- Question Card -->
+    <div id="questionCard" class="w-full cyber-card rounded-3xl p-5 sm:p-7 shadow-2xl relative overflow-hidden flex flex-col items-center">
+      
+      <!-- Top Topic Tag -->
+      <div class="flex items-center justify-between w-full mb-3">
+        <span id="topicBadge" class="text-[11px] font-bold text-emerald-300 bg-emerald-950/80 border border-emerald-500/40 px-3 py-1 rounded-full flex items-center gap-1.5 shadow-inner">
+          <span>🏷️</span> <span id="topicName">אחוזים</span>
+        </span>
+        <span id="levelBadge" class="text-[10px] font-semibold text-slate-400 bg-slate-800/80 px-2 py-0.5 rounded-full border border-slate-700">
+          רמה מתקדמת
+        </span>
+      </div>
+
+      <!-- Question Text / Equation -->
+      <div class="my-4 sm:my-6 text-center w-full min-h-[90px] flex flex-col items-center justify-center">
+        <div id="questionPrompt" class="text-slate-300 text-sm sm:text-base font-medium mb-3 leading-relaxed max-w-lg">
+          מה ערכו של הביטוי הבא?
+        </div>
+        <div id="questionDisplay" class="text-2xl sm:text-3xl md:text-4xl font-black text-white math-ltr-box tracking-wide px-4 py-2 bg-slate-900/60 rounded-2xl border border-slate-800 shadow-inner">
+          <!-- Dynamically inserted -->
+        </div>
+      </div>
+
+      <!-- Options Grid -->
+      <div id="optionsGrid" class="grid grid-cols-2 gap-2.5 sm:gap-3.5 w-full mt-2">
+        <!-- 4 Options dynamically created -->
+      </div>
+
+      <!-- Feedback / Solution Hint Box -->
+      <div id="feedbackBox" class="mt-4 w-full p-3 rounded-2xl text-xs sm:text-sm font-semibold hidden text-center transition"></div>
+
+    </div>
+
+    <!-- Quick Action / Skip & Scratchpad Controls -->
+    <div class="w-full flex items-center justify-between gap-3 px-1">
+      <button onclick="toggleScratchpad()" class="flex-1 py-2.5 px-3 rounded-2xl bg-slate-900 hover:bg-slate-800 active:scale-95 border border-slate-800 text-slate-300 text-xs font-bold flex items-center justify-center gap-1.5 transition shadow">
+        <span>✏️</span><span>פתח טיוטה לחישוב</span>
+      </button>
+      <button onclick="nextQuestion(true)" class="py-2.5 px-4 rounded-2xl bg-slate-900 hover:bg-slate-800 active:scale-95 border border-slate-800 text-slate-400 hover:text-slate-200 text-xs font-bold transition shadow">
+        דלג שאלה ↷
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Scratchpad Canvas Drawer Modal -->
+  <div id="scratchModal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex flex-col hidden">
+    <div class="p-3 bg-slate-900 border-b border-slate-800 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="text-lg">✏️</span>
+        <span class="font-bold text-sm text-white">לוח טיוטה וחישוב</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="clearScratchpad()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-rose-900/50 hover:text-rose-300 text-slate-300 text-xs font-bold border border-slate-700 transition">
+          נקה הכל 🗑️
+        </button>
+        <button onclick="toggleScratchpad()" class="px-4 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition">
+          סגור ✓
+        </button>
+      </div>
+    </div>
+    <div class="flex-1 relative bg-slate-950 touch-none">
+      <canvas id="scratchCanvas" class="w-full h-full block cursor-crosshair"></canvas>
+    </div>
+  </div>
+
+  <!-- Audio Synth & Game Engine -->
+  <script>
+    let audioCtx = null;
+    let soundEnabled = true;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        const AudioClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioClass) audioCtx = new AudioClass();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      document.getElementById('soundToggleBtn').innerText = soundEnabled ? '🔊' : '🔇';
+    }
+
+    function playSound(type) {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        if (type === 'correct') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(523.25, now); // C5
+          osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.12); // G5
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.25);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.25);
+        } else if (type === 'wrong') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(220, now);
+          osc.frequency.linearRampToValueAtTime(140, now + 0.2);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.2);
+        } else if (type === 'streak') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(587.33, now);
+          osc.frequency.exponentialRampToValueAtTime(1046.5, now + 0.2);
+          gain.gain.setValueAtTime(0.25, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.3);
+        }
+      } catch (e) {}
+    }
+
+    // Question Bank for 6th Grade
+    const questionBank = {
+      percent: [
+        {
+          prompt: "כמה זה 25% מתוך 80?",
+          equation: "25% \\times 80 = ?",
+          options: ["20", "25", "15", "30"],
+          answer: "20",
+          explanation: "25% הם בדיוק רבע (1/4). רבע מ-80 הוא 80 ÷ 4 = 20."
+        },
+        {
+          prompt: "חולצה שמחירה 120 ₪ נמכרת ב-20% הנחה. כמה שקלים נחסוך?",
+          equation: "20% \\text{ of } 120 = ?",
+          options: ["24 ₪", "20 ₪", "12 ₪", "30 ₪"],
+          answer: "24 ₪",
+          explanation: "10% מתוך 120 הם 12 ₪, לכן 20% הם 12 × 2 = 24 ₪."
+        },
+        {
+          prompt: "איזה אחוז שווה לשבר 3/5?",
+          equation: "\\frac{3}{5} = ?\\%",
+          options: ["60%", "50%", "75%", "35%"],
+          answer: "60%",
+          explanation: "מרחיבים את השבר פי 20: 3×20 / 5×20 = 60/100 = 60%."
+        },
+        {
+          prompt: "בכיתה יש 30 תלמידים. 40% מהם מנגנים בכלי נגינה. כמה תלמידים מנגנים?",
+          equation: "40% \\times 30 = ?",
+          options: ["12", "15", "10", "14"],
+          answer: "12",
+          explanation: "10% מ-30 הם 3. לכן 40% הם 3 × 4 = 12 תלמידים."
+        },
+        {
+          prompt: "כמה זה 75% מתוך 200?",
+          equation: "75% \\times 200 = ?",
+          options: ["150", "125", "175", "160"],
+          answer: "150",
+          explanation: "75% הם שלושה רבעים (3/4). רבע מ-200 הוא 50, לכן שלושה רבעים הם 150."
+        }
+      ],
+      negatives: [
+        {
+          prompt: "חשבו את תוצאת התרגיל עם מספרים מכוונים:",
+          equation: "(-8) + 15 = ?",
+          options: ["7", "-7", "23", "-23"],
+          answer: "7",
+          explanation: "כשמוסיפים 15 ל-(-8) מתקדמים ימינה על ציר המספרים 15 צעדים, ומגיעים ל-7."
+        },
+        {
+          prompt: "מה התוצאה של החיסור:",
+          equation: "(-4) - 9 = ?",
+          options: ["-13", "5", "-5", "13"],
+          answer: "-13",
+          explanation: "חיסור 9 ממספר שלילי מזיז אותנו עוד שמאלה: -4 - 9 = -13."
+        },
+        {
+          prompt: "מה תוצאת הכפל:",
+          equation: "(-6) \\times 4 = ?",
+          options: ["-24", "24", "-10", "10"],
+          answer: "-24",
+          explanation: "כפל מספר שלילי במספר חיובי נותן תמיד תוצאה שלילית: (-6) × 4 = -24."
+        },
+        {
+          prompt: "מה תוצאת החילוק בין שני מספרים שליליים:",
+          equation: "(-30) \\div (-5) = ?",
+          options: ["6", "-6", "25", "-25"],
+          answer: "6",
+          explanation: "חילוק מספר שלילי במספר שלילי נותן תוצאה חיובית (+): 30 ÷ 5 = 6."
+        },
+        {
+          prompt: "הטמפרטורה בחרמון הייתה -3 מעלות וירדה בעוד 5 מעלות. מה הטמפרטורה החדשה?",
+          equation: "(-3) - 5 = ?",
+          options: ["-8°", "-2°", "2°", "8°"],
+          answer: "-8°",
+          explanation: "ירידה בעוד 5 מעלות מ-(-3) מביאה ל: (-3) - 5 = -8 מעלות."
+        }
+      ],
+      fractions: [
+        {
+          prompt: "מה תוצאת הכפל בין השברים:",
+          equation: "\\frac{2}{3} \\times \\frac{3}{4} = ?",
+          options: ["1/2", "5/7", "2/4", "6/7"],
+          answer: "1/2",
+          explanation: "מונים כפול מונים (2×3=6) ומכנים כפול מכנים (3×4=12). 6/12 מצטמצם ל-1/2."
+        },
+        {
+          prompt: "חברו את השברים בעלי המכנים השונים:",
+          equation: "\\frac{1}{2} + \\frac{1}{4} = ?",
+          options: ["3/4", "2/6", "1/4", "2/4"],
+          answer: "3/4",
+          explanation: "מרחיבים 1/2 ל-2/4. ואז: 2/4 + 1/4 = 3/4."
+        },
+        {
+          prompt: "מהו השבר המצומצם ביותר השווה ל-18/24?",
+          equation: "\\frac{18}{24} = ?",
+          options: ["3/4", "2/3", "6/8", "9/12"],
+          answer: "3/4",
+          explanation: "מחלקים את המונה והמכנה בגורם המשותף 6: 18÷6=3 ו-24÷6=4, כלומר 3/4."
+        },
+        {
+          prompt: "מה תוצאת החילוק בשבר:",
+          equation: "4 \\div \\frac{1}{2} = ?",
+          options: ["8", "2", "4", "1/8"],
+          answer: "8",
+          explanation: "חילוק בשבר שווה לכפל בהופכי שלו: 4 × 2/1 = 8."
+        }
+      ],
+      ratios: [
+        {
+          prompt: "היחס בין בנים לבנות בכיתה הוא 2:3. אם יש 10 בנים, כמה בנות יש?",
+          equation: "2 : 3 = 10 : ?",
+          options: ["15", "12", "20", "18"],
+          answer: "15",
+          explanation: "אם 2 חלקים שווים ל-10 (פי 5), אז 3 חלקים שווים ל: 3 × 5 = 15 בנות."
+        },
+        {
+          prompt: "יואב ודנה חילקו 28 מדבקות ביחס של 3:4. כמה מדבקות קיבלה דנה (החלק הגדול)?",
+          equation: "28 \\text{ split } 3:4",
+          options: ["16", "12", "14", "18"],
+          answer: "16",
+          explanation: "סך הכל יש 3+4 = 7 חלקים. כל חלק שווה 28 ÷ 7 = 4. דנה מקבלת 4 × 4 = 16 מדבקות."
+        },
+        {
+          prompt: "קנה מידה במפה הוא 1:100,000. מרחק של 2 ס\"מ במפה שווה במציאות ל:",
+          equation: "2 \\text{ cm } \\times 100,000 = ?",
+          options: ["2 ק\"מ", "20 ק\"מ", "200 מטר", "20,000 מטר"],
+          answer: "2 ק\"מ",
+          explanation: "2 ס\"מ × 100,000 = 200,000 ס\"מ = 2,000 מטר = 2 ק\"מ."
+        }
+      ],
+      geometry: [
+        {
+          prompt: "מהו שטח משולש שאורך בסיסו 8 ס\"מ וגובהו לבסיס 5 ס\"מ?",
+          equation: "S = \\frac{8 \\times 5}{2} = ?",
+          options: ["20 סמ\"ר", "40 סמ\"ר", "26 סמ\"ר", "13 סמ\"ר"],
+          answer: "20 סמ\"ר",
+          explanation: "שטח משולש מחושב לפי (בסיס × גובה) ÷ 2: (8 × 5) ÷ 2 = 40 ÷ 2 = 20 סמ\"ר."
+        },
+        {
+          prompt: "מה נפחה של תיבה שממדיה: אורך 5 ס\"מ, רוחב 4 ס\"מ וגובה 3 ס\"מ?",
+          equation: "V = 5 \\times 4 \\times 3 = ?",
+          options: ["60 סמ\"ק", "50 סמ\"ק", "12 סמ\"ק", "24 סמ\"ק"],
+          answer: "60 סמ\"ק",
+          explanation: "נפח תיבה = אורך × רוחב × גובה = 5 × 4 × 3 = 60 סמ\"ק."
+        },
+        {
+          prompt: "אם רדיוס מעגל הוא 7 ס\"מ, מהו קוטר המעגל?",
+          equation: "d = 2 \\times r = ?",
+          options: ["14 ס\"מ", "21 ס\"מ", "49 ס\"מ", "3.5 ס\"מ"],
+          answer: "14 ס\"מ",
+          explanation: "קוטר מעגל שווה לפעמיים הרדיוס: 7 × 2 = 14 ס\"מ."
+        }
+      ]
+    };
+
+    let currentCategory = 'all';
+    let currentQuestion = null;
+    let score = 0;
+    let streak = 0;
+    let timerInterval = null;
+    let timeLeft = 60;
+    let timerActive = false;
+
+    const topicTitles = {
+      percent: 'אחוזים וחישובים',
+      negatives: 'מספרים מכוונים (שליליים)',
+      fractions: 'שברים פשוטים ועשרוניים',
+      ratios: 'יחס, פרופורציה וקנה מידה',
+      geometry: 'גאומטריה, שטחים ונפחים'
+    };
+
+    function setCategory(cat) {
+      currentCategory = cat;
+      document.querySelectorAll('.cat-btn').forEach(btn => {
+        if (btn.dataset.cat === cat) {
+          btn.classList.replace('bg-slate-800', 'bg-emerald-600');
+          btn.classList.replace('text-slate-300', 'text-white');
+        } else {
+          btn.classList.replace('bg-emerald-600', 'bg-slate-800');
+          btn.classList.replace('text-white', 'text-slate-300');
+        }
+      });
+      nextQuestion();
+    }
+
+    function getRandomQuestion() {
+      let pool = [];
+      if (currentCategory === 'all') {
+        Object.keys(questionBank).forEach(k => {
+          questionBank[k].forEach(q => pool.push({ ...q, category: k }));
+        });
+      } else {
+        (questionBank[currentCategory] || []).forEach(q => {
+          pool.push({ ...q, category: currentCategory });
+        });
+      }
+      return pool[Math.floor(Math.random() * pool.length)];
+    }
+
+    function nextQuestion(isSkip = false) {
+      const q = getRandomQuestion();
+      if (!q) return;
+      currentQuestion = q;
+
+      document.getElementById('topicName').innerText = topicTitles[q.category] || 'תרגיל מתקדם';
+      document.getElementById('questionPrompt').innerText = q.prompt;
+      document.getElementById('questionDisplay').innerText = q.equation.replace(/\\times/g, '×').replace(/\\div/g, '÷').replace(/\\frac{(\d+)}{(\d+)}/g, '$1/$2').replace(/\\text{.*?}/g, '');
+
+      const feedbackBox = document.getElementById('feedbackBox');
+      feedbackBox.classList.add('hidden');
+      feedbackBox.className = "mt-4 w-full p-3 rounded-2xl text-xs sm:text-sm font-semibold hidden text-center transition";
+
+      // Render Options (shuffled)
+      const optionsContainer = document.getElementById('optionsGrid');
+      optionsContainer.innerHTML = '';
+
+      const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
+
+      shuffledOptions.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = "option-btn p-3.5 sm:p-4 rounded-2xl bg-slate-900/90 hover:bg-slate-800 active:scale-95 border-2 border-slate-700/80 hover:border-emerald-500 text-white font-bold text-base sm:text-lg math-font shadow-lg flex items-center justify-center transition";
+        btn.innerText = opt;
+        btn.onclick = () => handleAnswer(opt, btn);
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function handleAnswer(selected, buttonElem) {
+      const isCorrect = selected === currentQuestion.answer;
+      const feedbackBox = document.getElementById('feedbackBox');
+      const allButtons = document.querySelectorAll('.option-btn');
+
+      allButtons.forEach(btn => btn.disabled = true);
+
+      if (isCorrect) {
+        buttonElem.classList.replace('border-slate-700/80', 'border-emerald-400');
+        buttonElem.classList.add('bg-emerald-600/50', 'text-emerald-200');
+        score += 10;
+        streak += 1;
+        playSound(streak >= 3 ? 'streak' : 'correct');
+
+        if (streak % 5 === 0) {
+          confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } });
+        }
+
+        feedbackBox.innerHTML = `<span>כל הכבוד! תשובה נכונה ✓</span> <div class="text-[11px] font-normal text-emerald-200 mt-1">${currentQuestion.explanation}</div>`;
+        feedbackBox.classList.remove('hidden');
+        feedbackBox.classList.add('bg-emerald-950/80', 'text-emerald-300', 'border', 'border-emerald-500/40');
+
+        updateScoreBoard();
+        setTimeout(() => nextQuestion(), 1400);
+
+      } else {
+        buttonElem.classList.replace('border-slate-700/80', 'border-rose-500');
+        buttonElem.classList.add('bg-rose-950/60', 'text-rose-200');
+        document.getElementById('questionCard').classList.add('shake');
+        setTimeout(() => document.getElementById('questionCard').classList.remove('shake'), 450);
+
+        streak = 0;
+        playSound('wrong');
+
+        // Highlight correct answer
+        allButtons.forEach(btn => {
+          if (btn.innerText === currentQuestion.answer) {
+            btn.classList.replace('border-slate-700/80', 'border-emerald-400');
+            btn.classList.add('bg-emerald-950/70', 'text-emerald-300');
+          }
+        });
+
+        feedbackBox.innerHTML = `<span>לא מדויק. התשובה היא: <strong>${currentQuestion.answer}</strong></span> <div class="text-[11px] font-normal text-rose-200 mt-1">${currentQuestion.explanation}</div>`;
+        feedbackBox.classList.remove('hidden');
+        feedbackBox.classList.add('bg-rose-950/80', 'text-rose-300', 'border', 'border-rose-500/40');
+
+        updateScoreBoard();
+        setTimeout(() => nextQuestion(), 2400);
+      }
+    }
+
+    function updateScoreBoard() {
+      document.getElementById('scoreCount').innerText = score;
+      document.getElementById('streakCount').innerText = streak;
+    }
+
+    function toggleTimerMode() {
+      timerActive = !timerActive;
+      const display = document.getElementById('timerDisplay');
+      if (timerActive) {
+        display.classList.remove('hidden');
+        timeLeft = 60;
+        display.innerText = timeLeft;
+        timerInterval = setInterval(() => {
+          timeLeft--;
+          display.innerText = timeLeft;
+          if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            timerActive = false;
+            display.classList.add('hidden');
+            alert(`הזמן נגמר! צברת ${score} נקודות ב-60 שניות! 🏆`);
+          }
+        }, 1000);
+      } else {
+        clearInterval(timerInterval);
+        display.classList.add('hidden');
+      }
+    }
+
+    // Scratchpad canvas logic
+    let isDrawing = false;
+    let canvas, ctx;
+
+    function initCanvas() {
+      canvas = document.getElementById('scratchCanvas');
+      ctx = canvas.getContext('2d');
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+
+      canvas.addEventListener('mousedown', startDraw);
+      canvas.addEventListener('mousemove', draw);
+      canvas.addEventListener('mouseup', endDraw);
+
+      canvas.addEventListener('touchstart', (e) => {
+        const touch = e.touches[0];
+        startDraw({ clientX: touch.clientX, clientY: touch.clientY });
+        e.preventDefault();
+      }, { passive: false });
+
+      canvas.addEventListener('touchmove', (e) => {
+        const touch = e.touches[0];
+        draw({ clientX: touch.clientX, clientY: touch.clientY });
+        e.preventDefault();
+      }, { passive: false });
+
+      canvas.addEventListener('touchend', endDraw);
+    }
+
+    function resizeCanvas() {
+      if (!canvas) return;
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+      ctx.lineWidth = 3;
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = '#34d399';
+    }
+
+    function startDraw(e) {
+      isDrawing = true;
+      const rect = canvas.getBoundingClientRect();
+      ctx.beginPath();
+      ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+    }
+
+    function draw(e) {
+      if (!isDrawing) return;
+      const rect = canvas.getBoundingClientRect();
+      ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+      ctx.stroke();
+    }
+
+    function endDraw() {
+      isDrawing = false;
+    }
+
+    function clearScratchpad() {
+      if (ctx && canvas) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    function toggleScratchpad() {
+      const modal = document.getElementById('scratchModal');
+      const isHidden = modal.classList.contains('hidden');
+      if (isHidden) {
+        modal.classList.remove('hidden');
+        if (!canvas) initCanvas();
+        else resizeCanvas();
+      } else {
+        modal.classList.add('hidden');
+      }
+    }
+
+    // Initialize first question
+    window.addEventListener('DOMContentLoaded', () => {
+      nextQuestion();
+    });
+  </script>
+</body>
+</html>
