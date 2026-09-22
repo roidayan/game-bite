@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <title>אלופי החשבון - כיתה ה' | גרסה 1.9.2</title>
+    <!-- כרטיסיות שיתוף קישור בוואטסאפ וברשתות חברתיות -->
+    <meta property="og:title" content="אלופי החשבון - כיתה ה' | גרסה 1.9.2">
+    <meta property="og:description" content="תרגול מתמטיקה אינטראקטיבי: חיבור, חיסור, כפל, חילוק ובעיות מילוליות לכיתה ה'">
+    <meta property="og:type" content="website">
+    <!-- תמונת תצוגה מקדימה לשיתוף בוואטסאפ וברשתות (ניתן להחליף לקישור של תמונה אישית) -->
+    <meta property="og:image" content="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=1200&auto=format&fit=crop">
+    <meta property="og:image:alt" content="אלופי החשבון - תרגול מתמטיקה לכיתה ה'">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="אלופי החשבון - כיתה ה' | גרסה 1.9.2">
+    <meta name="twitter:description" content="תרגול מתמטיקה אינטראקטיבי: חיבור, חיסור, כפל, חילוק ובעיות מילוליות לכיתה ה'">
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=1200&auto=format&fit=crop">
+    <!-- צלמית אתר (Favicon) בלשונית הדפדפן -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📐</text></svg>">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Canvas Confetti CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --sat: env(safe-area-inset-top, 0px);
+            --sab: env(safe-area-inset-bottom, 0px);
+            --sal: env(safe-area-inset-left, 0px);
+            --sar: env(safe-area-inset-right, 0px);
+        }
+        body {
+            font-family: 'Rubik', sans-serif;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            padding-bottom: var(--sab);
+            padding-left: var(--sal);
+            padding-right: var(--sar);
+        }
+        header {
+            padding-top: calc(0.5rem + var(--sat));
+        }
+        .math-font {
+            font-feature-settings: "tnum";
+            font-variant-numeric: tabular-nums;
+        }
+        @keyframes popSuccess {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+        .pop-success {
+            animation: popSuccess 0.4s ease-out;
+        }
+        @keyframes shakeErr {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-7px); }
+            40%, 80% { transform: translateX(7px); }
+        }
+        .shake {
+            animation: shakeErr 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-900 text-slate-100 min-h-screen min-h-[100dvh] flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+
+    <header class="w-full bg-slate-800/90 backdrop-blur border-b border-slate-700/80 sticky top-0 z-30 px-3 sm:px-4 py-2 sm:py-3 transition-all">
+        <div class="max-w-4xl mx-auto flex flex-wrap items-center justify-between gap-2 sm:gap-3">
+            <!-- כותרת וגרסה -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-500 flex items-center justify-center text-lg sm:text-xl shadow-lg shadow-indigo-500/20 shrink-0">
+                    📐
+                </div>
+                <div>
+                    <h1 class="font-bold text-base sm:text-lg leading-tight text-white flex items-center gap-1.5 flex-wrap">
+                        <span>אלופי החשבון</span>
+                        <span class="text-[11px] sm:text-xs bg-indigo-500/30 text-indigo-300 font-semibold px-2 py-0.5 rounded-full border border-indigo-500/40">כיתה ה'</span>
+                        <span id="appVersion" class="text-[10px] sm:text-[11px] font-mono bg-emerald-500/20 text-emerald-300 font-medium px-2 py-0.5 rounded-full border border-emerald-500/30 flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse"></span>
+                            גרסה 1.9.2
+                        </span>
+                    </h1>
+                    <p class="text-[11px] sm:text-xs text-slate-400 hidden xs:block">חיבור, חיסור, כפל, חילוק ובעיות מילוליות</p>
+                </div>
+            </div>
+
+            <!-- סרגל סטטיסטיקה, מחוונים וכפתור מסך מלא -->
+            <div class="flex items-center gap-1.5 sm:gap-2.5 bg-slate-900/80 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-2xl border border-slate-700/60 shadow-inner text-xs sm:text-sm">
+                <!-- רצף הצלחות -->
+                <div class="flex items-center gap-1 text-amber-400" title="רצף תשובות נכונות">
+                    <span class="text-base sm:text-lg">🔥</span>
+                    <span id="streakCount" class="font-black math-font">0</span>
+                </div>
+                <div class="h-3.5 sm:h-4 w-px bg-slate-700"></div>
+                <!-- ניקוד מצטבר (נקודה לכל תרגיל) -->
+                <div class="flex items-center gap-1 text-indigo-400" title="ניקוד מצטבר: נקודה אחת לכל תרגיל">
+                    <span class="text-base sm:text-lg">⭐</span>
+                    <span id="scoreCount" class="font-black math-font">0</span>
+                    <span class="text-[10px] sm:text-[11px] text-slate-400 font-normal">נק'</span>
+                </div>
+                <div class="h-3.5 sm:h-4 w-px bg-slate-700"></div>
+                <!-- סה"כ נפתרו -->
+                <div class="flex items-center gap-1 text-emerald-400" title="סך הכל תרגילים שנפתרו">
+                    <span class="text-base sm:text-lg">🎯</span>
+                    <span id="solvedCount" class="font-black math-font">0</span>
+                </div>
+                <div class="h-3.5 sm:h-4 w-px bg-slate-700"></div>
+                <!-- מתג מסך מלא -->
+                <button id="toggleFullscreenBtn" class="hover:scale-110 active:scale-95 transition cursor-pointer p-1 text-slate-300 hover:text-white" title="החלף מצב מסך מלא">
+                    ⛶
+                </button>
+                <div class="h-3.5 sm:h-4 w-px bg-slate-700"></div>
+                <!-- מתג שמע -->
+                <button id="toggleSoundBtn" class="text-base sm:text-lg hover:scale-110 active:scale-95 transition cursor-pointer p-1" title="הפעל / השתק צלילים">
+                    🔊
+                </button>
+                <div class="h-3.5 sm:h-4 w-px bg-slate-700"></div>
+                <!-- חזרה לתפריט הראשי -->
+                <a href="../../index.html" class="text-base sm:text-lg hover:scale-110 active:scale-95 transition cursor-pointer p-1 text-slate-300 hover:text-white" title="חזרה לתפריט הראשי">
+                    🏠
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-2xl w-full mx-auto px-3 sm:px-4 pt-2 sm:pt-4 pb-6 flex-1 flex flex-col items-center justify-start gap-3 sm:gap-5">
+
+        <!-- בורר פעולות וקטגוריות עם צלמיות צבעוניות מעוצבות -->
+        <div class="w-full bg-slate-800/70 p-1 sm:p-1.5 rounded-2xl border border-slate-700/70 grid grid-cols-3 sm:grid-cols-6 gap-1 sm:gap-1.5 shadow-md">
+            <!-- כפתור הכל -->
+            <button data-op="all" class="category-btn py-1.5 sm:py-2 px-1.5 sm:px-2 text-xs sm:text-sm font-semibold rounded-xl transition cursor-pointer bg-indigo-600 text-white shadow-md active flex items-center justify-center gap-1 sm:gap-1.5 whitespace-nowrap min-h-[42px]">
+                <span class="w-4 h-4 sm:w-5 sm:h-5 rounded-lg bg-indigo-500/30 text-indigo-200 text-xs flex items-center justify-center border border-indigo-400/40 shadow-sm shrink-0">✨</span>
+                <span>הכל</span>
+            </button>
+            <!-- כפתור חיבור -->
+            <button data-op="add" class="category-btn py-1.5 sm:py-2 px-1.5 sm:px-2 text-xs sm:text-sm font-semibold rounded-xl transition cursor-pointer bg-slate-700/50 text-slate-300 hover:bg-slate-700 flex items-center justify-center gap-1 sm:gap-1.5 whitespace-nowrap min-h-[42px]">
+                <span class="w-4 h-4 sm:w-5 sm:h-5 rounded-lg bg-emerald-500/25 text-emerald-300 font-black text-xs sm:text-sm flex items-center justify-center border border-emerald-400/50 shadow-sm leading-none shrink-0">+</span>
+                <span>חיבור</span>
+            </button>
+            <!-- כפתור חיסור -->
+            <button data-op="sub" class="category-btn py-1.5 sm:py-2 px-1.5 sm:px-2 text-xs sm:text-sm font-semibold rounded-xl transition cursor-pointer bg-slate-700/50 text-slate-300 hover:bg-slate-700 flex items-center justify-center gap-1 sm:gap-1.5 whitespace-nowrap min-h-[42px]">
+                <span class="w-4 h-4 sm:w-5 sm:h-5 rounded-lg bg-sky-500/25 text-sky-300 font-black text-xs sm:text-sm flex items-center justify-center border border-sky-400/50 shadow-sm leading-none shrink-0">−</span>
+                <span>חיסור</span>
+            </button>
+            <!-- כפתור כפל -->
+            <button data-op="mul" class="category-btn py-1.5 sm:py-2 px-1.5 sm:px-2 text-xs sm:text-sm font-semibold rounded-xl transition cursor-pointer bg-slate-700/50 text-slate-300 hover:bg-slate-700 flex items-center justify-center gap-1 sm:gap-1.5 whitespace-nowrap min-h-[42px]" title="כפל">
+                <span class="w-4 h-4 sm:w-5 sm:h-5 rounded-lg bg-amber-500/25 text-amber-300 font-black text-xs sm:text-sm flex items-center justify-center border border-amber-400/50 shadow-sm leading-none shrink-0">✕</span>
+                <span>כפל</span>
+            </button>
+            <!-- כפתור חילוק -->
+            <button data-op="div" class="category-btn py-1.5 sm:py-2 px-1.5 sm:px-2 text-xs sm:text-sm font-semibold rounded-xl transition cursor-pointer bg-slate-700/50 text-slate-300 hover:bg-slate-700 flex items-center justify-center gap-1 sm:gap-1.5 whitespace-nowrap min-h-[42px]">
+                <span class="w-4 h-4 sm:w-5 sm:h-5 rounded-lg bg-purple-500/25 text-purple-300 font-black text-xs sm:text-sm flex items-center justify-center border border-purple-400/50 shadow-sm leading-none shrink-0">÷</span>
+                <span>חילוק</span>
+            </button>
+            <!-- כפתור מילולי -->
+            <button data-op="word" class="category-btn py-1.5 sm:py-2 px-1.5 sm:px-2 text-xs sm:text-sm font-semibold rounded-xl transition cursor-pointer bg-slate-700/50 text-slate-300 hover:bg-slate-700 flex items-center justify-center gap-1 sm:gap-1.5 whitespace-nowrap min-h-[42px]">
+                <span class="w-4 h-4 sm:w-5 sm:h-5 rounded-lg bg-pink-500/25 text-pink-300 text-xs flex items-center justify-center border border-pink-400/50 shadow-sm shrink-0">📖</span>
+                <span>מילולי</span>
+            </button>
+        </div>
+
+        <div id="exerciseCard" class="w-full bg-slate-800/90 border-2 border-slate-700/90 rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-2xl transition-all duration-300 relative overflow-hidden backdrop-blur">
+            
+            <!-- תגיות נושא ורמה -->
+            <div class="flex items-center justify-between mb-3 sm:mb-4 pb-2 sm:pb-3 border-b border-slate-700/60">
+                <span id="topicTag" class="text-xs sm:text-sm font-bold text-indigo-400 bg-indigo-500/10 border border-indigo-500/30 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full">
+                    חיבור רב-ספרתי
+                </span>
+                <span id="difficultyLabel" class="text-[11px] sm:text-xs text-slate-400 font-medium">
+                    רמת כיתה ה'
+                </span>
+            </div>
+
+            <!-- תצוגת תרגיל רגיל (משוואה מספרית) -->
+            <div id="equationDisplay" class="my-3 sm:my-6 flex items-center justify-center gap-2 sm:gap-4 flex-wrap math-font text-2xl sm:text-4xl md:text-5xl font-extrabold text-slate-100" dir="ltr">
+                <span id="num1" class="tracking-wide sm:tracking-wider">4,280</span>
+                <span id="operatorSign" class="text-indigo-400 text-2xl sm:text-4xl md:text-5xl font-black">+</span>
+                <span id="num2" class="tracking-wide sm:tracking-wider">1,350</span>
+                <span class="text-slate-400">=</span>
+                <span id="placeholderQuestion" class="min-w-[4.5rem] sm:min-w-[6.5rem] text-center text-indigo-400 bg-slate-900/80 border-2 border-indigo-400/50 rounded-xl sm:rounded-2xl py-0.5 sm:py-1 px-2 shadow-inner">?</span>
+            </div>
+
+            <!-- תצוגת בעיה מילולית -->
+            <div id="wordProblemDisplay" class="my-3 sm:my-6 hidden text-right">
+                <div class="bg-indigo-950/40 border border-indigo-500/30 rounded-2xl p-3.5 sm:p-5 shadow-inner">
+                    <p id="wordStoryText" class="text-sm sm:text-lg text-slate-200 leading-relaxed font-medium">
+                        טוען בעיה מילולית...
+                    </p>
+                    <div class="mt-3 flex items-center gap-2">
+                        <span id="wordUnitBadge" class="text-xs font-bold bg-indigo-500/20 text-indigo-300 px-2.5 py-1 rounded-lg border border-indigo-500/30">
+                            יחידות: שטרות
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <form id="answerForm" class="mt-4 sm:mt-6 flex flex-col gap-3 sm:gap-4">
+                <!-- שדה התשובה וכפתור הבדיקה בשורות נפרדות למניעת חיתוך ונוחות הקלדה מקסימלית -->
+                <div class="flex flex-col gap-2.5 sm:gap-3 w-full">
+                    <input 
+                        type="number" 
+                        id="userAnswer" 
+                        inputmode="numeric" 
+                        step="any"
+                        placeholder="רשמו את התוצאה..." 
+                        autocomplete="off"
+                        class="w-full bg-slate-900/90 border-2 border-slate-600 focus:border-indigo-500 rounded-xl sm:rounded-2xl py-3 px-4 text-center text-xl sm:text-2xl font-bold text-white placeholder-slate-500 focus:outline-none focus:ring-4 focus:ring-indigo-500/20 transition shadow-inner math-font"
+                        required
+                    />
+                    <button 
+                        type="submit" 
+                        id="checkBtn"
+                        class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 active:scale-95 text-white font-black text-base sm:text-lg py-3 px-6 rounded-xl sm:rounded-2xl shadow-lg shadow-indigo-500/30 transition cursor-pointer flex items-center gap-2 justify-center">
+                        <span>בדוק תשובה</span>
+                        <span>🚀</span>
+                    </button>
+                </div>
+
+                <!-- כפתורי עזר: דילוג, מקלדת ניידת, לוח טיוטה -->
+                <div class="flex items-center justify-between gap-2 pt-1">
+                    <button 
+                        type="button" 
+                        id="skipBtn"
+                        class="text-xs sm:text-sm font-semibold text-slate-400 hover:text-slate-200 bg-slate-800/80 hover:bg-slate-700/60 border border-slate-700 py-1.5 sm:py-2 px-3 sm:px-3.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 active:scale-95">
+                        <span>דילוג</span>
+                        <span>⏭️</span>
+                    </button>
+
+                    <div class="flex items-center gap-2">
+                        <button 
+                            type="button" 
+                            id="toggleNumpadBtn"
+                            class="text-xs sm:text-sm font-semibold text-slate-400 hover:text-slate-200 bg-slate-800/80 hover:bg-slate-700/60 border border-slate-700 py-1.5 sm:py-2 px-3 rounded-xl transition cursor-pointer flex items-center gap-1 active:scale-95 sm:hidden">
+                            <span>⌨️ מקלדת</span>
+                        </button>
+                        <button 
+                            type="button" 
+                            id="openScratchpadBtn"
+                            class="text-xs sm:text-sm font-semibold text-indigo-300 hover:text-indigo-100 bg-indigo-950/40 hover:bg-indigo-900/50 border border-indigo-500/40 py-1.5 sm:py-2 px-3 sm:px-3.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 active:scale-95 shadow-sm">
+                            <span>לוח טיוטה</span>
+                            <span>✏️</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- תיבת משוב חיה (הצלחה / שגיאה / מידע) -->
+                <div id="feedbackMessage" class="hidden w-full text-center py-2 sm:py-2.5 px-3 sm:px-4 rounded-xl font-bold text-xs sm:text-base flex items-center justify-center gap-2 transition-all">
+                </div>
+            </form>
+        </div>
+
+        <!-- מקלדת וירטואלית אופציונלית למובייל -->
+        <div id="virtualNumpad" class="w-full max-w-sm bg-slate-800/90 border border-slate-700/80 rounded-2xl p-2.5 grid grid-cols-3 gap-1.5 shadow-xl hidden sm:hidden">
+            <button type="button" class="numpad-btn bg-slate-700 hover:bg-slate-600 text-white font-bold text-lg py-2.5 rounded-xl active:scale-95 transition">1</button>
+            <button type="button" class="numpad-btn bg-slate-700 hover:bg-slate-600 text-white font-bold text-lg py-2.5 rounded-xl active:scale-95 transition">2</button>
+            <button type="button" class="numpad-btn bg-slate-700 hover:bg-slate-600 text-white font-bold text-lg py-2.5 rounded-xl active:scale-95 transition">3</button>
+            <button type="button" class="numpad-btn bg-slate-700 hover:bg-slate-600 text-white font-bold text-lg py-2.5 rounded-xl active:scale-95 transition">4</button>
+            <button type="button" class="numpad-btn bg-slate-700 hover:bg-slate-600 text-white font-bold text-lg py-2.5 rounded-xl active:scale-95 transition">5</button>
+            <button type="button" class="numpad-btn bg-slate-700 hover:bg-slate-600 text-white font-bold text-lg py-2.5 rounded-xl active:scale-95 transition">6</button>
+            <button type="button" class="numpad-btn bg-slate-700 hover:bg-slate-600 text-white font-bold text-lg py-2.5 rounded-xl active:scale-95 transition">7</button>
+            <button type="button" class="numpad-btn bg-slate-700 hover:bg-slate-600 text-white font-bold text-lg py-2.5 rounded-xl active:scale-95 transition">8</button>
+            <button type="button" class="numpad-btn bg-slate-700 hover:bg-slate-600 text-white font-bold text-lg py-2.5 rounded-xl active:scale-95 transition">9</button>
+            <button type="button" id="numClearBtn" class="bg-rose-900/50 text-rose-300 hover:bg-rose-800/60 font-bold text-xs py-2.5 rounded-xl active:scale-95 transition">נקה</button>
+            <button type="button" class="numpad-btn bg-slate-700 hover:bg-slate-600 text-white font-bold text-lg py-2.5 rounded-xl active:scale-95 transition">0</button>
+            <button type="button" id="numBackBtn" class="bg-slate-700/80 hover:bg-slate-600 text-white font-bold text-lg py-2.5 rounded-xl active:scale-95 transition">⌫</button>
+        </div>
+    </main>
+
+    <!-- מודאל לוח טיוטה לשרבוט חישובים במאונך -->
+    <div id="scratchpadModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm hidden opacity-0 transition-opacity duration-200 p-2 sm:p-6">
+        <div class="bg-slate-900 border-2 border-indigo-500/50 rounded-2xl sm:rounded-3xl w-full max-w-2xl h-[85vh] max-h-[640px] flex flex-col shadow-2xl overflow-hidden">
+            <!-- כותרת לוח הטיוטה -->
+            <div class="px-4 py-2.5 bg-slate-800/90 border-b border-slate-700 flex items-center justify-between">
+                <div class="flex items-center gap-2 text-indigo-300 font-bold text-xs sm:text-base">
+                    <span>✏️</span>
+                    <span>לוח טיוטה וחישובים במאונך</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button id="clearScratchpadBtn" class="bg-rose-950/60 text-rose-300 hover:bg-rose-900/80 border border-rose-500/40 text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl font-bold transition active:scale-95 cursor-pointer">
+                        מחק הכל 🗑️
+                    </button>
+                    <button id="closeScratchpadBtn" class="bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl font-bold transition active:scale-95 cursor-pointer">
+                        סגור ✖
+                    </button>
+                </div>
+            </div>
+            <!-- משטח הציור -->
+            <div id="canvasContainer" class="flex-1 relative bg-slate-950 cursor-crosshair touch-none">
+                <canvas id="scratchCanvas" class="w-full h-full block"></canvas>
+            </div>
+            <!-- תחתית לוח הטיוטה -->
+            <div class="px-3 py-2 bg-slate-800/80 border-t border-slate-700/60 text-center text-[11px] sm:text-xs text-slate-400">
+                רשת המשבצות נועדה לסייע בסידור טורים מדויק לחיבור, חיסור, כפל ארוך או חילוק
+            </div>
+        </div>
+    </div>
+
+    <!-- חלון חגיגת רצף מיוחד (כל 10 פתרונות נכונים) -->
+    <div id="streakMilestoneModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 backdrop-blur-md hidden opacity-0 transition-opacity duration-300 p-4">
+        <div id="milestoneModalContent" class="relative bg-gradient-to-b from-indigo-900/95 via-purple-900/90 to-slate-900/95 border-2 border-amber-400/80 rounded-3xl p-5 sm:p-9 max-w-md w-full text-center shadow-[0_0_50px_rgba(245,158,11,0.4)] transform transition-all duration-300 scale-90">
+            <!-- דמות מעודדת מקפצת -->
+            <div class="relative mx-auto -mt-14 sm:-mt-18 w-24 h-24 sm:w-28 sm:h-28 bg-gradient-to-tr from-amber-400 to-yellow-300 rounded-full flex items-center justify-center text-5xl sm:text-6xl shadow-2xl border-4 border-slate-900 animate-bounce">
+                🦁
+            </div>
+            <div class="mt-3 sm:mt-4">
+                <span class="inline-block bg-amber-400/20 text-amber-300 border border-amber-400/40 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                    🌟 הישג מיוחד!
+                </span>
+                <h2 class="text-xl sm:text-3xl font-black text-white mt-2">
+                    כל הכבוד! אלופים!
+                </h2>
+                <p id="streakMilestoneText" class="text-base sm:text-lg text-amber-200 font-bold mt-2">
+                    הגעתם לרצף של 10 תשובות נכונות! 🔥
+                </p>
+                <p class="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed">
+                    איזה דיוק, מהירות וריכוז מדהימים! המשיכו לכבוש את הפסגה 🏆
+                </p>
+            </div>
+            <div class="mt-5 flex flex-col items-center gap-2 sm:gap-3">
+                <button id="closeMilestoneBtn" class="w-full bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 active:scale-95 text-slate-950 font-black text-sm sm:text-base py-2.5 sm:py-3 px-6 rounded-xl sm:rounded-2xl shadow-lg shadow-amber-500/30 transition cursor-pointer">
+                    קדימה, לתרגיל הבא! 🚀
+                </button>
+                <span id="milestoneTimerText" class="text-[11px] sm:text-xs text-slate-400 font-medium">עובר אוטומטית בעוד 4 שניות...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- תחתית הדף (Footer) -->
+    <footer class="text-center py-2.5 sm:py-4 px-2 text-[11px] sm:text-xs text-slate-500 border-t border-slate-800">
+        תרגול מתמטיקה חכם • מותאם לתוכנית הלימודים של משרד החינוך לכיתה ה' • <span class="text-slate-400 font-mono">v1.9.2</span>
+    </footer>
+
+    <script>
+        // ניהול מצב מסך מלא
+        const toggleFullscreenBtn = document.getElementById('toggleFullscreenBtn');
+
+        function updateFullscreenIcon() {
+            if (!toggleFullscreenBtn) return;
+            const isFull = !!(document.fullscreenElement || document.webkitFullscreenElement);
+            toggleFullscreenBtn.textContent = isFull ? '🗗' : '⛶';
+            toggleFullscreenBtn.title = isFull ? 'צא ממסך מלא' : 'החלף למסך מלא';
+        }
+
+        if (toggleFullscreenBtn) {
+            toggleFullscreenBtn.addEventListener('click', () => {
+                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                    const el = document.documentElement;
+                    if (el.requestFullscreen) {
+                        el.requestFullscreen().catch(err => console.log(err));
+                    } else if (el.webkitRequestFullscreen) {
+                        el.webkitRequestFullscreen();
+                    }
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen().catch(err => console.log(err));
+                    } else if (document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('fullscreenchange', updateFullscreenIcon);
+        document.addEventListener('webkitfullscreenchange', updateFullscreenIcon);
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => {
+                if (typeof resizeCanvas === 'function') resizeCanvas();
+            }, 250);
+        });
+
+        // מנוע שמע סינתטי (Web Audio API)
+        let audioCtx = null;
+        let isSoundMuted = false;
+
+        function initAudio() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (AudioContext) {
+                    audioCtx = new AudioContext();
+                }
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playSound(type) {
+            if (isSoundMuted) return;
+            try {
+                initAudio();
+                if (!audioCtx) return;
+                const now = audioCtx.currentTime;
+
+                if (type === 'correct') {
+                    // צליל פתרון נכון - אקורד עולה שמח
+                    const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+                    notes.forEach((freq, idx) => {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+
+                        gain.gain.setValueAtTime(0, now + idx * 0.08);
+                        gain.gain.linearRampToValueAtTime(0.18, now + idx * 0.08 + 0.02);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.08 + 0.35);
+
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.start(now + idx * 0.08);
+                        osc.stop(now + idx * 0.08 + 0.4);
+                    });
+                } else if (type === 'fanfare') {
+                    // תרועת ניצחון לחגיגת רצף של 10
+                    const notes = [
+                        { f: 523.25, time: 0, dur: 0.14 },    // C5
+                        { f: 659.25, time: 0.14, dur: 0.14 }, // E5
+                        { f: 783.99, time: 0.28, dur: 0.14 }, // G5
+                        { f: 1046.50, time: 0.42, dur: 0.55 } // C6
+                    ];
+                    notes.forEach(({ f, time, dur }) => {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(f, now + time);
+
+                        gain.gain.setValueAtTime(0, now + time);
+                        gain.gain.linearRampToValueAtTime(0.24, now + time + 0.02);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, now + time + dur);
+
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.start(now + time);
+                        osc.stop(now + time + dur + 0.05);
+                    });
+                } else if (type === 'wrong') {
+                    // צליל שגיאה עדין
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, now);
+                    osc.frequency.exponentialRampToValueAtTime(130, now + 0.28);
+
+                    gain.gain.setValueAtTime(0.18, now);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.28);
+
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.3);
+                }
+            } catch (e) {
+                console.error("Audio error: ", e);
+            }
+        }
+
+        // ניהול מצב האפליקציה (State)
+        const state = {
+            streak: 0,
+            score: 0,
+            solved: 0,
+            selectedOp: 'all',
+            currentProblem: null,
+            isLocked: false,
+            wrongAttempts: 0
+        };
+
+        // Cache DOM elements
+        const num1El = document.getElementById('num1');
+        const num2El = document.getElementById('num2');
+        const operatorSignEl = document.getElementById('operatorSign');
+        const placeholderQuestionEl = document.getElementById('placeholderQuestion');
+        const topicTagEl = document.getElementById('topicTag');
+        const difficultyLabelEl = document.getElementById('difficultyLabel');
+        const userAnswerInput = document.getElementById('userAnswer');
+        const answerForm = document.getElementById('answerForm');
+        const feedbackMessage = document.getElementById('feedbackMessage');
+        const exerciseCard = document.getElementById('exerciseCard');
+        const streakCountEl = document.getElementById('streakCount');
+        const scoreCountEl = document.getElementById('scoreCount');
+        const solvedCountEl = document.getElementById('solvedCount');
+        const toggleSoundBtn = document.getElementById('toggleSoundBtn');
+        const skipBtn = document.getElementById('skipBtn');
+        const equationDisplay = document.getElementById('equationDisplay');
+        const wordProblemDisplay = document.getElementById('wordProblemDisplay');
+        const wordStoryText = document.getElementById('wordStoryText');
+        const wordUnitBadge = document.getElementById('wordUnitBadge');
+
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function generateWordProblem() {
+            const problemTypes = [
+                'moneyExchange', 
+                'bankBills', 
+                'shoppingChange', 
+                'schoolDistribution', 
+                'boxesPackaging', 
+                'libraryBooks', 
+                'cinemaTickets'
+            ];
+            const choice = problemTypes[getRandomInt(0, problemTypes.length - 1)];
+
+            if (choice === 'moneyExchange') {
+                const coinsCounts = [80, 120, 150, 180, 200, 240, 350, 420, 500];
+                const coins = coinsCounts[getRandomInt(0, coinsCounts.length - 1)];
+                const totalMoney = coins * 10;
+                const bills = totalMoney / 100;
+                return {
+                    isWord: true,
+                    story: `הקופאית בחנות החליפה ${coins.toLocaleString('he-IL')} מטבעות של 10 ש״ח לשטרות של 100 ש״ח.<br><strong class="text-indigo-300">כמה שטרות של 100 ש״ח היא קיבלה?</strong>`,
+                    unit: 'שטרות',
+                    correctAnswer: bills,
+                    title: 'בעיה מילולית: המרת כספים',
+                    diff: 'רמת כיתה ה\''
+                };
+            }
+
+            if (choice === 'bankBills') {
+                const billsCount = getRandomInt(8, 25) * 2;
+                const totalAmount = billsCount * 200;
+                const bills50 = totalAmount / 50;
+                return {
+                    isWord: true,
+                    story: `בבנק פרטו ${billsCount} שטרות של 200 ש״ח לשטרות של 50 ש״ח בלבד.<br><strong class="text-indigo-300">כמה שטרות של 50 ש״ח התקבלו בסך הכל?</strong>`,
+                    unit: 'שטרות',
+                    correctAnswer: bills50,
+                    title: 'בעיה מילולית: פריטת שטרות',
+                    diff: 'רמת כיתה ה\''
+                };
+            }
+
+            if (choice === 'shoppingChange') {
+                const notebookCount = getRandomInt(3, 6);
+                const notebookPrice = getRandomInt(12, 18);
+                const extraItemPrice = getRandomInt(25, 45);
+                const totalSpent = (notebookCount * notebookPrice) + extraItemPrice;
+                const paidBill = 200;
+                const change = paidBill - totalSpent;
+
+                return {
+                    isWord: true,
+                    story: `דני קנה ${notebookCount} מחברות במחיר ${notebookPrice} ש״ח למחברת, וגם קלמר במחיר ${extraItemPrice} ש״ח.<br>הוא שילם לקופאי בשטר של ${paidBill} ש״ח. <strong class="text-indigo-300">כמה עודף בש״ח קיבל דני?</strong>`,
+                    unit: 'ש״ח עודף',
+                    correctAnswer: change,
+                    title: 'בעיה מילולית: קנייה ועודף',
+                    diff: 'רמת כיתה ה\''
+                };
+            }
+
+            if (choice === 'schoolDistribution') {
+                const classes = getRandomInt(3, 5);
+                const studentsPerClass = getRandomInt(28, 34);
+                const totalStudents = classes * studentsPerClass;
+
+                return {
+                    isWord: true,
+                    story: `בשכבת כיתה ה' בבית הספר לומדים ${totalStudents} תלמידים. חילקו אותם שווה בשווה ל-${classes} כיתות.<br><strong class="text-indigo-300">כמה תלמידים לומדים בכל כיתה?</strong>`,
+                    unit: 'תלמידים',
+                    correctAnswer: studentsPerClass,
+                    title: 'בעיה מילולית: חילוק שווה',
+                    diff: 'רמת כיתה ה\''
+                };
+            }
+
+            if (choice === 'boxesPackaging') {
+                const itemsPerBox = [12, 15, 20, 24, 25][getRandomInt(0, 4)];
+                const boxes = getRandomInt(15, 40);
+                const totalItems = itemsPerBox * boxes;
+
+                return {
+                    isWord: true,
+                    story: `במפעל ממתקים ארזו ${totalItems.toLocaleString('he-IL')} חטיפים בקופסאות קרטון. בכל קופסה שמו בדיוק ${itemsPerBox} חטיפים.<br><strong class="text-indigo-300">כמה קופסאות קרטון מילאו במפעל?</strong>`,
+                    unit: 'קופסאות',
+                    correctAnswer: boxes,
+                    title: 'בעיה מילולית: אריזה וחלוקה',
+                    diff: 'רמת כיתה ה\''
+                };
+            }
+
+            if (choice === 'libraryBooks') {
+                const startBooks = getRandomInt(12, 28) * 100;
+                const donated = getRandomInt(15, 45) * 10;
+                const borrowed = getRandomInt(12, 35) * 10;
+                const remaining = startBooks + donated - borrowed;
+
+                return {
+                    isWord: true,
+                    story: `בספריית בית הספר היו ${startBooks.toLocaleString('he-IL')} ספרים. לרגל שבוע הספר נתרמו עוד ${donated} ספרים, ולאחר מכן הושאלו לתלמידים ${borrowed} ספרים.<br><strong class="text-indigo-300">כמה ספרים נשארו בספרייה כעת?</strong>`,
+                    unit: 'ספרים',
+                    correctAnswer: remaining,
+                    title: 'בעיה מילולית: מאזן ספרים',
+                    diff: 'רמת כיתה ה\''
+                };
+            }
+
+            const ticketPrice = [35, 40, 45, 50][getRandomInt(0, 3)];
+            const people = getRandomInt(12, 25);
+            const totalCost = ticketPrice * people;
+            return {
+                isWord: true,
+                story: `כרטיס כניסה להצגה עולה ${ticketPrice} ש״ח. קבוצת ילדים שילמה ביחד סך כולל של ${totalCost.toLocaleString('he-IL')} ש״ח.<br><strong class="text-indigo-300">כמה ילדים היו בקבוצה?</strong>`,
+                unit: 'ילדים',
+                correctAnswer: people,
+                title: 'בעיה מילולית: מציאת כמות',
+                diff: 'רמת כיתה ה\''
+            };
+        }
+
+        function generateAddition() {
+            const subTypes = ['friendlyHundreds', 'threeDigits', 'roundThousands'];
+            const type = subTypes[getRandomInt(0, subTypes.length - 1)];
+            let a, b, title;
+
+            if (type === 'friendlyHundreds') {
+                // עשרות ומאות עגולות ונוחות לחישוב (למשל 240 + 380, 150 + 260)
+                a = getRandomInt(12, 55) * 10;
+                b = getRandomInt(11, 45) * 10;
+                title = 'חיבור עשרות ומאות';
+            } else if (type === 'roundThousands') {
+                // אלפים ומאות שלמים (למשל 1,200 + 800, 2,500 + 1,300)
+                a = getRandomInt(8, 35) * 100;
+                b = getRandomInt(4, 25) * 100;
+                title = 'חיבור מאות ואלפים שלמים';
+            } else {
+                // מספרים תלת-ספרתיים ידידותיים
+                a = getRandomInt(125, 480);
+                b = getRandomInt(110, 390);
+                title = 'חיבור תלת-ספרתי';
+            }
+
+            return {
+                isWord: false,
+                num1: a,
+                num2: b,
+                op: '+',
+                symbol: '+',
+                correctAnswer: a + b,
+                title: title,
+                diff: 'רמת כיתה ה\''
+            };
+        }
+
+        function generateSubtraction() {
+            const subTypes = ['subtractFromRound', 'friendlyTens', 'threeDigitSub'];
+            const type = subTypes[getRandomInt(0, subTypes.length - 1)];
+            let a, b, title;
+
+            if (type === 'subtractFromRound') {
+                // חיסור ממאות או אלפים שלמים (למשל 1,000 - 340, 500 - 180, 800 - 250)
+                const roundBases = [500, 600, 700, 800, 900, 1000, 1200, 2000];
+                a = roundBases[getRandomInt(0, roundBases.length - 1)];
+                b = getRandomInt(12, Math.floor(a / 10) - 8) * 10;
+                title = 'חיסור ממספרים עגולים';
+            } else if (type === 'friendlyTens') {
+                // חיסור עשרות שלמות (למשל 420 - 180, 730 - 250)
+                const tensA = getRandomInt(25, 85);
+                const tensB = getRandomInt(11, tensA - 6);
+                a = tensA * 10;
+                b = tensB * 10;
+                title = 'חיסור עשרות ומאות';
+            } else {
+                // חיסור תלת-ספרתי נוח עם פריטה מבוקרת
+                a = getRandomInt(250, 780);
+                b = getRandomInt(110, a - 50);
+                title = 'חיסור עם פריטה';
+            }
+
+            return {
+                isWord: false,
+                num1: a,
+                num2: b,
+                op: '-',
+                symbol: '−',
+                correctAnswer: a - b,
+                title: title,
+                diff: 'רמת כיתה ה\''
+            };
+        }
+
+        function generateMultiplication() {
+            const subTypes = ['tableFacts', 'tensMulti', 'friendlyTwoByOne', 'tensByTens'];
+            const type = subTypes[getRandomInt(0, subTypes.length - 1)];
+            let a, b, title;
+
+            if (type === 'tableFacts') {
+                // שליטה מעולה בלוח הכפל המורחב (עד 12)
+                a = getRandomInt(6, 12);
+                b = getRandomInt(6, 12);
+                title = 'לוח הכפל המורחב';
+            } else if (type === 'tensMulti') {
+                // כפל עשרות שלמות בחד-ספרתי (למשל 30 × 6, 40 × 8, 70 × 5)
+                a = getRandomInt(2, 9) * 10;
+                b = getRandomInt(3, 9);
+                title = 'כפל עשרות בחד-ספרתי';
+            } else if (type === 'tensByTens') {
+                // כפל עשרות בעשרות (למשל 20 × 30, 40 × 20, 50 × 30)
+                const tensA = [20, 30, 40, 50, 60];
+                const tensB = [20, 30, 40, 50];
+                a = tensA[getRandomInt(0, tensA.length - 1)];
+                b = tensB[getRandomInt(0, tensB.length - 1)];
+                title = 'כפל עשרות שלמות';
+            } else {
+                // דו-ספרתי ידידותי בחד-ספרתי (למשל 12 × 4, 15 × 3, 25 × 4, 14 × 5, 21 × 3)
+                const friendlyNumbers = [12, 13, 14, 15, 16, 21, 24, 25, 32];
+                a = friendlyNumbers[getRandomInt(0, friendlyNumbers.length - 1)];
+                b = getRandomInt(2, 5);
+                title = 'כפל דו-ספרתי בחד-ספרתי';
+            }
+
+            return {
+                isWord: false,
+                num1: a,
+                num2: b,
+                op: '×',
+                symbol: '✕',
+                correctAnswer: a * b,
+                title: title,
+                diff: 'רמת כיתה ה\''
+            };
+        }
+
+        function generateDivision() {
+            const subTypes = ['tableDivision', 'tensDivision', 'friendlyDivision', 'divideByTen'];
+            const type = subTypes[getRandomInt(0, subTypes.length - 1)];
+            let divisor, quotient, dividend, title;
+
+            if (type === 'tableDivision') {
+                // חילוק מתוך לוח הכפל (למשל 56 ÷ 7, 72 ÷ 8, 63 ÷ 9, 48 ÷ 6)
+                divisor = getRandomInt(4, 9);
+                quotient = getRandomInt(4, 12);
+                dividend = divisor * quotient;
+                title = 'חילוק מתוך לוח הכפל';
+            } else if (type === 'tensDivision') {
+                // חילוק עשרות ומאות שלמות (למשל 240 ÷ 6 = 40, 350 ÷ 7 = 50, 480 ÷ 8 = 60)
+                divisor = getRandomInt(3, 9);
+                const quotientTens = getRandomInt(2, 9);
+                dividend = divisor * quotientTens * 10;
+                quotient = quotientTens * 10;
+                title = 'חילוק עשרות ומאות';
+            } else if (type === 'divideByTen') {
+                // חילוק ב-10 או ב-100 (למשל 450 ÷ 10, 800 ÷ 100, 1,200 ÷ 10)
+                const isHundred = Math.random() > 0.6;
+                if (isHundred) {
+                    divisor = 100;
+                    quotient = getRandomInt(4, 45);
+                } else {
+                    divisor = 10;
+                    quotient = getRandomInt(12, 95);
+                }
+                dividend = divisor * quotient;
+                title = divisor === 100 ? 'חילוק ב-100' : 'חילוק ב-10';
+            } else {
+                // חילוק מספר דו-ספרתי נוח במספר חד-ספרתי (למשל 48 ÷ 4 = 12, 69 ÷ 3 = 23, 75 ÷ 5 = 15, 84 ÷ 2 = 42)
+                divisor = getRandomInt(2, 5);
+                const quotients = [11, 12, 13, 14, 15, 16, 21, 22, 23, 25, 31, 32];
+                quotient = quotients[getRandomInt(0, quotients.length - 1)];
+                dividend = divisor * quotient;
+                title = 'חילוק בחד-ספרתי';
+            }
+
+            return {
+                isWord: false,
+                num1: dividend,
+                num2: divisor,
+                op: '÷',
+                symbol: '÷',
+                correctAnswer: quotient,
+                title: title,
+                diff: 'רמת כיתה ה\''
+            };
+        }
+
+        function getNextProblem() {
+            let op = state.selectedOp;
+            if (op === 'all') {
+                const ops = ['add', 'sub', 'mul', 'div', 'word'];
+                op = ops[getRandomInt(0, ops.length - 1)];
+            }
+
+            switch (op) {
+                case 'add': return generateAddition();
+                case 'sub': return generateSubtraction();
+                case 'mul': return generateMultiplication();
+                case 'div': return generateDivision();
+                case 'word': return generateWordProblem();
+                default: return generateAddition();
+            }
+        }
+
+        function displayProblem(problem) {
+            state.currentProblem = problem;
+            state.wrongAttempts = 0;
+            state.isLocked = false;
+
+            if (topicTagEl) topicTagEl.textContent = problem.title;
+            if (difficultyLabelEl) difficultyLabelEl.textContent = problem.diff;
+
+            if (problem.isWord) {
+                if (equationDisplay) equationDisplay.classList.add('hidden');
+                if (wordProblemDisplay) wordProblemDisplay.classList.remove('hidden');
+                if (wordStoryText) wordStoryText.innerHTML = problem.story;
+                if (wordUnitBadge) wordUnitBadge.textContent = problem.unit ? `יחידות: ${problem.unit}` : 'תשובה מספרית';
+                if (userAnswerInput) userAnswerInput.placeholder = problem.unit ? `רשמו מספר (${problem.unit})...` : 'רשמו את התשובה...';
+            } else {
+                if (wordProblemDisplay) wordProblemDisplay.classList.add('hidden');
+                if (equationDisplay) equationDisplay.classList.remove('hidden');
+                if (num1El) num1El.textContent = problem.num1.toLocaleString('he-IL');
+                if (num2El) num2El.textContent = problem.num2.toLocaleString('he-IL');
+                if (operatorSignEl) operatorSignEl.textContent = problem.symbol;
+                if (userAnswerInput) userAnswerInput.placeholder = 'רשמו את התוצאה...';
+            }
+
+            if (userAnswerInput) {
+                userAnswerInput.value = '';
+                userAnswerInput.disabled = false;
+            }
+
+            if (placeholderQuestionEl) {
+                placeholderQuestionEl.textContent = '?';
+                placeholderQuestionEl.classList.remove('text-emerald-400', 'border-emerald-400');
+                placeholderQuestionEl.classList.add('text-indigo-400', 'border-indigo-400');
+            }
+
+            if (feedbackMessage) {
+                feedbackMessage.className = 'hidden w-full text-center py-2 sm:py-2.5 px-3 sm:px-4 rounded-xl font-bold text-xs sm:text-base flex items-center justify-center gap-2';
+            }
+            if (exerciseCard) {
+                exerciseCard.classList.remove('border-emerald-500', 'border-rose-500', 'pop-success', 'shake');
+                exerciseCard.classList.add('border-slate-700/90');
+            }
+
+            setTimeout(() => {
+                if (userAnswerInput) userAnswerInput.focus();
+            }, 60);
+        }
+
+        function triggerConfetti() {
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 55,
+                    spread: 65,
+                    origin: { y: 0.65 },
+                    colors: ['#6366f1', '#10b981', '#f59e0b', '#ec4899']
+                });
+            }
+        }
+
+        let fireworksInterval = null;
+        function launchFireworks(durationMs = 3800) {
+            if (typeof confetti !== 'function') return;
+            const animationEnd = Date.now() + durationMs;
+            const defaults = { startVelocity: 35, spread: 360, ticks: 70, zIndex: 10000 };
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            if (fireworksInterval) clearInterval(fireworksInterval);
+            fireworksInterval = setInterval(() => {
+                const timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) {
+                    clearInterval(fireworksInterval);
+                    fireworksInterval = null;
+                    return;
+                }
+                const count = Math.floor(45 * (timeLeft / durationMs));
+                confetti(Object.assign({}, defaults, { particleCount: count, origin: { x: randomInRange(0.15, 0.35), y: Math.random() * 0.4 + 0.2 } }));
+                confetti(Object.assign({}, defaults, { particleCount: count, origin: { x: randomInRange(0.65, 0.85), y: Math.random() * 0.4 + 0.2 } }));
+            }, 300);
+        }
+
+        // חגיגת רצף כל 10 פתרונות
+        const streakMilestoneModal = document.getElementById('streakMilestoneModal');
+        const milestoneModalContent = document.getElementById('milestoneModalContent');
+        const streakMilestoneText = document.getElementById('streakMilestoneText');
+        const closeMilestoneBtn = document.getElementById('closeMilestoneBtn');
+        const milestoneTimerText = document.getElementById('milestoneTimerText');
+        let milestoneCountdownTimer = null;
+        let milestoneDismissTimeout = null;
+
+        function showMilestoneCelebration(streakCount) {
+            if (!streakMilestoneModal) return;
+            streakMilestoneText.textContent = `הגעתם לרצף מדהים של ${streakCount} תשובות נכונות! 🔥`;
+            streakMilestoneModal.classList.remove('hidden');
+
+            setTimeout(() => {
+                streakMilestoneModal.classList.remove('opacity-0');
+                if (milestoneModalContent) {
+                    milestoneModalContent.classList.remove('scale-90');
+                    milestoneModalContent.classList.add('scale-100');
+                }
+            }, 20);
+
+            launchFireworks(4000);
+
+            let secondsLeft = 4;
+            if (milestoneTimerText) {
+                milestoneTimerText.textContent = `עובר אוטומטית בעוד ${secondsLeft} שניות...`;
+            }
+
+            if (milestoneCountdownTimer) clearInterval(milestoneCountdownTimer);
+            milestoneCountdownTimer = setInterval(() => {
+                secondsLeft--;
+                if (secondsLeft > 0 && milestoneTimerText) {
+                    milestoneTimerText.textContent = `עובר אוטומטית בעוד ${secondsLeft} שניות...`;
+                }
+            }, 1000);
+
+            if (milestoneDismissTimeout) clearTimeout(milestoneDismissTimeout);
+            milestoneDismissTimeout = setTimeout(() => {
+                closeMilestoneAndProceed();
+            }, 4200);
+        }
+
+        function closeMilestoneAndProceed() {
+            if (milestoneCountdownTimer) {
+                clearInterval(milestoneCountdownTimer);
+                milestoneCountdownTimer = null;
+            }
+            if (milestoneDismissTimeout) {
+                clearTimeout(milestoneDismissTimeout);
+                milestoneDismissTimeout = null;
+            }
+
+            if (streakMilestoneModal && milestoneModalContent) {
+                streakMilestoneModal.classList.add('opacity-0');
+                milestoneModalContent.classList.remove('scale-100');
+                milestoneModalContent.classList.add('scale-90');
+            }
+
+            setTimeout(() => {
+                if (streakMilestoneModal) streakMilestoneModal.classList.add('hidden');
+                displayProblem(getNextProblem());
+            }, 300);
+        }
+
+        if (closeMilestoneBtn) {
+            closeMilestoneBtn.addEventListener('click', closeMilestoneAndProceed);
+        }
+
+        function checkAnswer(e) {
+            if (e) e.preventDefault();
+            if (state.isLocked || !state.currentProblem) return;
+
+            const userValStr = userAnswerInput.value.trim();
+            if (userValStr === '') {
+                showFeedback('אנא הקלידו תשובה לפני הבדיקה 😊', 'warning');
+                userAnswerInput.focus();
+                return;
+            }
+
+            const userVal = Number(userValStr);
+            const isCorrect = userVal === state.currentProblem.correctAnswer;
+
+            if (isCorrect) {
+                state.isLocked = true;
+                state.streak++;
+                state.score += 1; // נקודה אחת על כל תרגיל שהצליח
+                state.solved++;
+                updateStats();
+
+                const isMilestone = (state.streak > 0 && state.streak % 10 === 0);
+
+                if (!state.currentProblem.isWord && placeholderQuestionEl) {
+                    placeholderQuestionEl.textContent = state.currentProblem.correctAnswer.toLocaleString('he-IL');
+                    placeholderQuestionEl.classList.remove('text-indigo-400', 'border-indigo-400');
+                    placeholderQuestionEl.classList.add('text-emerald-400', 'border-emerald-400');
+                }
+
+                if (exerciseCard) {
+                    exerciseCard.classList.remove('border-slate-700/90', 'border-rose-500', 'shake');
+                    exerciseCard.classList.add('border-emerald-500', 'pop-success');
+                }
+
+                const unitText = state.currentProblem.unit ? ` (${state.currentProblem.unit})` : '';
+                const praises = [
+                    `מעולה! ${state.currentProblem.correctAnswer.toLocaleString('he-IL')}${unitText} - פתרון מדויק! 🌟`, 
+                    `כל הכבוד! ${state.currentProblem.correctAnswer.toLocaleString('he-IL')}${unitText} נכון מאוד! 🎯`, 
+                    `אלופים! בדיוק כך! 🏆`, 
+                    `תשובה מושלמת! 🚀`
+                ];
+                const randomPraise = praises[Math.floor(Math.random() * praises.length)];
+                showFeedback(randomPraise, 'success');
+
+                if (isMilestone) {
+                    playSound('fanfare');
+                    setTimeout(() => {
+                        showMilestoneCelebration(state.streak);
+                    }, 400);
+                } else {
+                    playSound('correct');
+                    triggerConfetti();
+
+                    // מעבר אוטומטי לתרגיל הבא
+                    setTimeout(() => {
+                        displayProblem(getNextProblem());
+                    }, 1250);
+                }
+
+            } else {
+                state.streak = 0;
+                state.wrongAttempts++;
+                updateStats();
+
+                playSound('wrong');
+
+                if (exerciseCard) {
+                    exerciseCard.classList.remove('border-slate-700/90', 'border-emerald-500');
+                    exerciseCard.classList.add('border-rose-500', 'shake');
+
+                    setTimeout(() => {
+                        exerciseCard.classList.remove('shake');
+                    }, 500);
+                }
+
+                if (state.wrongAttempts >= 2) {
+                    showFeedback(`לא בדיוק... נסו להיעזר בלוח הטיוטה ✏️ כדי לחשב במאונך`, 'error');
+                } else {
+                    showFeedback('לא נכון, נסו שוב! בדקו שוב את החישוב 💪', 'error');
+                }
+
+                userAnswerInput.select();
+                userAnswerInput.focus();
+            }
+        }
+
+        function showFeedback(text, type) {
+            if (!feedbackMessage) return;
+            feedbackMessage.classList.remove('hidden', 'bg-emerald-500/20', 'text-emerald-300', 'border-emerald-500/40',
+                'bg-rose-500/20', 'text-rose-300', 'border-rose-500/40', 'bg-amber-500/20', 'text-amber-300', 'border-amber-500/40');
+
+            if (type === 'success') {
+                feedbackMessage.classList.add('bg-emerald-500/20', 'text-emerald-300', 'border', 'border-emerald-500/40');
+                feedbackMessage.innerHTML = `<span>✓</span> <span>${text}</span>`;
+            } else if (type === 'error') {
+                feedbackMessage.classList.add('bg-rose-500/20', 'text-rose-300', 'border', 'border-rose-500/40');
+                feedbackMessage.innerHTML = `<span>✕</span> <span>${text}</span>`;
+            } else {
+                feedbackMessage.classList.add('bg-amber-500/20', 'text-amber-300', 'border', 'border-amber-500/40');
+                feedbackMessage.innerHTML = `<span>ℹ️</span> <span>${text}</span>`;
+            }
+        }
+
+        function updateStats() {
+            if (streakCountEl) streakCountEl.textContent = state.streak;
+            if (scoreCountEl) scoreCountEl.textContent = state.score;
+            if (solvedCountEl) solvedCountEl.textContent = state.solved;
+        }
+
+        const scratchpadModal = document.getElementById('scratchpadModal');
+        const openScratchpadBtn = document.getElementById('openScratchpadBtn');
+        const closeScratchpadBtn = document.getElementById('closeScratchpadBtn');
+        const clearScratchpadBtn = document.getElementById('clearScratchpadBtn');
+        const scratchCanvas = document.getElementById('scratchCanvas');
+        const canvasContainer = document.getElementById('canvasContainer');
+        let ctx = scratchCanvas ? scratchCanvas.getContext('2d') : null;
+        let isDrawing = false;
+
+        function resizeCanvas() {
+            if (!scratchCanvas || !canvasContainer) return;
+            const rect = canvasContainer.getBoundingClientRect();
+            
+            let tempCanvas = document.createElement('canvas');
+            tempCanvas.width = scratchCanvas.width;
+            tempCanvas.height = scratchCanvas.height;
+            let tempCtx = tempCanvas.getContext('2d');
+            if (scratchCanvas.width > 0 && scratchCanvas.height > 0) {
+                tempCtx.drawImage(scratchCanvas, 0, 0);
+            }
+
+            scratchCanvas.width = rect.width;
+            scratchCanvas.height = rect.height;
+
+            drawGrid();
+            if (tempCanvas.width > 0 && tempCanvas.height > 0) {
+                ctx.drawImage(tempCanvas, 0, 0);
+            }
+        }
+
+        function drawGrid() {
+            if (!ctx || !scratchCanvas) return;
+            ctx.strokeStyle = '#1e293b';
+            ctx.lineWidth = 1;
+            const step = 32;
+            for (let x = 0; x < scratchCanvas.width; x += step) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, scratchCanvas.height);
+                ctx.stroke();
+            }
+            for (let y = 0; y < scratchCanvas.height; y += step) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(scratchCanvas.width, y);
+                ctx.stroke();
+            }
+        }
+
+        function getCanvasPos(e) {
+            const rect = scratchCanvas.getBoundingClientRect();
+            const clientX = e.touches && e.touches.length > 0 ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches && e.touches.length > 0 ? e.touches[0].clientY : e.clientY;
+            return {
+                x: clientX - rect.left,
+                y: clientY - rect.top
+            };
+        }
+
+        function startDrawing(e) {
+            isDrawing = true;
+            const pos = getCanvasPos(e);
+
+            // איפוס נתיב מדויק למניעת קווים שגויים
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+
+            // ציור נקודה מסודרת במקום הלחיצה
+            ctx.fillStyle = '#38bdf8';
+            ctx.beginPath();
+            ctx.arc(pos.x, pos.y, 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // פתיחת נתיב חדש ממיקום הלחיצה
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+        }
+
+        function stopDrawing() {
+            if (!isDrawing) return;
+            isDrawing = false;
+            if (ctx) ctx.beginPath();
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            if (e.cancelable) e.preventDefault();
+            const pos = getCanvasPos(e);
+
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.strokeStyle = '#38bdf8'; // צבע תכלת מואר ונוח לקריאה
+
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+        }
+
+        function clearCanvas() {
+            if (!ctx || !scratchCanvas) return;
+            ctx.clearRect(0, 0, scratchCanvas.width, scratchCanvas.height);
+            drawGrid();
+        }
+
+        function openScratchpad() {
+            if (!scratchpadModal) return;
+            scratchpadModal.classList.remove('hidden');
+            setTimeout(() => {
+                scratchpadModal.classList.remove('opacity-0');
+                resizeCanvas();
+            }, 10);
+        }
+
+        function closeScratchpad() {
+            if (!scratchpadModal) return;
+            scratchpadModal.classList.add('opacity-0');
+            setTimeout(() => {
+                scratchpadModal.classList.add('hidden');
+            }, 200);
+        }
+
+        if (scratchCanvas) {
+            scratchCanvas.addEventListener('mousedown', startDrawing);
+            scratchCanvas.addEventListener('mousemove', draw);
+            window.addEventListener('mouseup', stopDrawing);
+
+            scratchCanvas.addEventListener('touchstart', startDrawing, { passive: false });
+            scratchCanvas.addEventListener('touchmove', draw, { passive: false });
+            window.addEventListener('touchend', stopDrawing);
+        }
+
+        if (openScratchpadBtn) openScratchpadBtn.addEventListener('click', openScratchpad);
+        if (closeScratchpadBtn) closeScratchpadBtn.addEventListener('click', closeScratchpad);
+        if (clearScratchpadBtn) clearScratchpadBtn.addEventListener('click', clearCanvas);
+        window.addEventListener('resize', resizeCanvas);
+
+        // מתג שמע
+        if (toggleSoundBtn) {
+            toggleSoundBtn.addEventListener('click', () => {
+                isSoundMuted = !isSoundMuted;
+                toggleSoundBtn.textContent = isSoundMuted ? '🔇' : '🔊';
+            });
+        }
+
+        // טופס שליחת תשובה
+        if (answerForm) {
+            answerForm.addEventListener('submit', checkAnswer);
+        }
+
+        // כפתור דילוג עם מאגר משפטי עידוד והעצמה
+        if (skipBtn) {
+            const skipEncouragements = [
+                'חבל לדלג, קדימה תנסו יותר – אתם לגמרי מסוגלים! 💪',
+                'לא נורא, בתרגיל הבא בטוח תצליחו! אל תוותרו 🚀',
+                'התרגיל הבא קטן עליכם! קחו נשימה וקדימה 🌟',
+                'חבל לוותר, נסו בפעם הבאה להיעזר בלוח הטיוטה ✏️',
+                'מאמינים בכם! בואו נפתור את התרגיל הזה 🎯',
+                'דילוג קל – עכשיו שיא הריכוז בתרגיל הבא! 🔥',
+                'קדימה אלופים, נסו בכל הכוח! אתם בדרך להצלחה ✨'
+            ];
+
+            skipBtn.addEventListener('click', () => {
+                displayProblem(getNextProblem());
+                const randomMsg = skipEncouragements[Math.floor(Math.random() * skipEncouragements.length)];
+                showFeedback(randomMsg, 'info');
+            });
+        }
+
+        // כפתורי מעבר בין קטגוריות
+        const categoryButtons = document.querySelectorAll('.category-btn');
+        categoryButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                categoryButtons.forEach(b => {
+                    b.classList.remove('bg-indigo-600', 'text-white', 'shadow-md', 'active');
+                    b.classList.add('bg-slate-700/50', 'text-slate-300');
+                });
+                btn.classList.remove('bg-slate-700/50', 'text-slate-300');
+                btn.classList.add('bg-indigo-600', 'text-white', 'shadow-md', 'active');
+
+                state.selectedOp = btn.getAttribute('data-op');
+                displayProblem(getNextProblem());
+            });
+        });
+
+        // מקלדת מספרים למובייל
+        const toggleNumpadBtn = document.getElementById('toggleNumpadBtn');
+        const virtualNumpad = document.getElementById('virtualNumpad');
+        if (toggleNumpadBtn && virtualNumpad) {
+            toggleNumpadBtn.addEventListener('click', () => {
+                virtualNumpad.classList.toggle('hidden');
+                toggleNumpadBtn.textContent = virtualNumpad.classList.contains('hidden') ? '⌨️ מקלדת' : 'הסתר מקלדת';
+            });
+        }
+
+        document.querySelectorAll('.numpad-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (userAnswerInput) {
+                    userAnswerInput.value += btn.textContent.trim();
+                    userAnswerInput.focus();
+                }
+            });
+        });
+
+        const numClearBtn = document.getElementById('numClearBtn');
+        if (numClearBtn) {
+            numClearBtn.addEventListener('click', () => {
+                if (userAnswerInput) {
+                    userAnswerInput.value = '';
+                    userAnswerInput.focus();
+                }
+            });
+        }
+
+        const numBackBtn = document.getElementById('numBackBtn');
+        if (numBackBtn) {
+            numBackBtn.addEventListener('click', () => {
+                if (userAnswerInput) {
+                    userAnswerInput.value = userAnswerInput.value.slice(0, -1);
+                    userAnswerInput.focus();
+                }
+            });
+        }
+
+        // אתחול וטעינת תרגיל ראשון
+        window.addEventListener('DOMContentLoaded', () => {
+            displayProblem(getNextProblem());
+        });
+    </script>
+</body>
+</html>
