@@ -21,3 +21,5 @@
 * **Commit Message Format:**
   * Brief, clear subject line (imperative mood, e.g. `feat: add ...`, `fix: ...`).
   * Followed by a blank line and a brief body description when possible, highlighting key rationale or details without repeating the subject line.
+* **Push Policy:**
+  * Do not push commits to remote (`git push`) without explicit confirmation from the user, allowing local commit review and modification first.
