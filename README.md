@@ -2,6 +2,8 @@
 
 Mobile-first interactive HTML5 educational math games portal.
 
+> 🤖 **AI-Generated:** The games in this arcade are AI-generated for mobile-first web play.
+
 ## 🌐 Play Online
 Play directly in browser on mobile or desktop:
 👉 **[https://roidayan.github.io/game-bite/](https://roidayan.github.io/game-bite/)**
