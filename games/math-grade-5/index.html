@@ -1067,21 +1067,31 @@
         function resizeCanvas() {
             if (!scratchCanvas || !canvasContainer) return;
             const rect = canvasContainer.getBoundingClientRect();
-            
-            let tempCanvas = document.createElement('canvas');
-            tempCanvas.width = scratchCanvas.width;
-            tempCanvas.height = scratchCanvas.height;
-            let tempCtx = tempCanvas.getContext('2d');
-            if (scratchCanvas.width > 0 && scratchCanvas.height > 0) {
-                tempCtx.drawImage(scratchCanvas, 0, 0);
+            const newWidth = Math.floor(rect.width);
+            const newHeight = Math.floor(rect.height);
+
+            if (newWidth <= 0 || newHeight <= 0) return;
+
+            // If dimensions are already set and unchanged, keep existing drawing intact
+            if (scratchCanvas.width === newWidth && scratchCanvas.height === newHeight) {
+                return;
             }
 
-            scratchCanvas.width = rect.width;
-            scratchCanvas.height = rect.height;
+            let tempCanvas = null;
+            if (scratchCanvas.width > 0 && scratchCanvas.height > 0) {
+                tempCanvas = document.createElement('canvas');
+                tempCanvas.width = scratchCanvas.width;
+                tempCanvas.height = scratchCanvas.height;
+                tempCanvas.getContext('2d').drawImage(scratchCanvas, 0, 0);
+            }
 
-            drawGrid();
-            if (tempCanvas.width > 0 && tempCanvas.height > 0) {
+            scratchCanvas.width = newWidth;
+            scratchCanvas.height = newHeight;
+
+            if (tempCanvas) {
                 ctx.drawImage(tempCanvas, 0, 0);
+            } else {
+                drawGrid();
             }
         }
 

@@ -1014,12 +1014,36 @@
 
     function resizeCanvas() {
       const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width;
-      canvas.height = 320;
+      const newWidth = Math.floor(rect.width);
+      const newHeight = 320;
+      if (newWidth <= 0) return;
+
+      if (canvas.width === newWidth && canvas.height === newHeight) {
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = penColor;
+        return;
+      }
+
+      let temp = null;
+      if (canvas.width > 0 && canvas.height > 0) {
+        temp = document.createElement('canvas');
+        temp.width = canvas.width;
+        temp.height = canvas.height;
+        temp.getContext('2d').drawImage(canvas, 0, 0);
+      }
+
+      canvas.width = newWidth;
+      canvas.height = newHeight;
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
       ctx.lineWidth = 4;
       ctx.strokeStyle = penColor;
+
+      if (temp) {
+        ctx.drawImage(temp, 0, 0);
+      }
     }
 
     function setPenColor(color) {
