@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <!-- הגדרות שם המשחק לכל הפלטפורמות -->
+    <title>משחק מילים דריה | Game Bite</title>
+    <meta name="apple-mobile-web-app-title" content="משחק מילים">
+    <meta name="application-name" content="משחק מילים דריה">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta id="meta-theme-color" name="theme-color" content="#ec4899">
+    
+    <!-- תגיות לשיתוף -->
+    <meta property="og:title" content="משחק מילים דריה | Game Bite">
+    <meta property="og:description" content="משחק הקלדה ואיות כיפי בעברית לילדים עם בחירת ערכת צבעים ורוד או כחול-לבן">
+    <meta property="og:site_name" content="Game Bite">
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔤</text></svg>">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800;900&family=Varela+Round&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --sat: env(safe-area-inset-top, 0px);
+            --sab: env(safe-area-inset-bottom, 0px);
+
+            /* ברירת מחדל: ערכת ורוד */
+            --primary: #ec4899;
+            --primary-hover: #db2777;
+            --primary-active: #be185d;
+            --primary-light: #fdf2f8;
+            --primary-subtle: #fce7f3;
+            --primary-border: #fbcfe8;
+            --primary-text: #db2777;
+            --bg-grad-from: #fff1f2;
+            --bg-grad-to: #ffe4e6;
+            --key-active-bg: #ec4899;
+            --key-active-shadow: #db2777;
+            --card-border: #fbcfe8;
+            --theme-glow: rgba(236, 72, 153, 0.2);
+        }
+
+        /* ערכת כחול-לבן לבנים */
+        body.theme-blue {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-active: #1e40af;
+            --primary-light: #eff6ff;
+            --primary-subtle: #dbeafe;
+            --primary-border: #bfdbfe;
+            --primary-text: #1d4ed8;
+            --bg-grad-from: #f0f9ff;
+            --bg-grad-to: #dbeafe;
+            --key-active-bg: #2563eb;
+            --key-active-shadow: #1d4ed8;
+            --card-border: #bfdbfe;
+            --theme-glow: rgba(37, 99, 235, 0.2);
+        }
+
+        * {
+            font-family: 'Assistant', 'Varela Round', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-grad-from) 0%, var(--bg-grad-to) 100%);
+            min-height: 100vh;
+            padding-top: var(--sat);
+            padding-bottom: var(--sab);
+            overflow-x: hidden;
+            touch-action: manipulation;
+            transition: background 0.3s ease;
+        }
+
+        /* אלמנטים דינמיים לפי ערכת צבע */
+        .theme-btn-primary {
+            background-color: var(--primary);
+            color: #ffffff;
+            transition: all 0.2s;
+        }
+        .theme-btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+        .theme-btn-primary:active {
+            background-color: var(--primary-active);
+        }
+
+        .theme-text-primary {
+            color: var(--primary);
+        }
+
+        .theme-bg-light {
+            background-color: var(--primary-light);
+        }
+
+        .theme-border-primary {
+            border-color: var(--primary-border);
+        }
+
+        .theme-card-border {
+            border-color: var(--card-border);
+        }
+
+        .letter-box {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: clamp(34px, 11vw, 62px);
+            height: clamp(48px, 13vw, 82px);
+            font-size: clamp(26px, 8.5vw, 52px);
+            font-weight: 800;
+            margin: 0 2px;
+            border-bottom: 4px solid #cbd5e1;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            background: white;
+            border-radius: 10px 10px 4px 4px;
+            cursor: default;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+        
+        .letter-box.active-cursor {
+            border-bottom-color: var(--primary) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px var(--theme-glow);
+        }
+
+        .correct { 
+            color: #16a34a; 
+            border-bottom-color: #16a34a !important; 
+            transform: translateY(-4px);
+            background-color: #f0fdf4;
+            box-shadow: 0 4px 8px rgba(22, 163, 74, 0.15);
+        }
+        
+        .wrong { 
+            color: #dc2626; 
+            border-bottom-color: #dc2626 !important; 
+            animation: shake 0.4s; 
+            background-color: #fef2f2;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-4px); }
+            40% { transform: translateX(4px); }
+            60% { transform: translateX(-4px); }
+            80% { transform: translateX(4px); }
+        }
+
+        .kb-key {
+            transition: all 0.1s;
+            box-shadow: 0 3px 0 #94a3b8;
+            touch-action: manipulation;
+        }
+        .kb-key:active {
+            transform: translateY(3px);
+            box-shadow: 0 0 0 #94a3b8;
+            background-color: #f1f5f9;
+        }
+        .kb-key.pressed {
+            background-color: var(--key-active-bg) !important;
+            color: white !important;
+            transform: translateY(3px);
+            box-shadow: 0 0 0 var(--key-active-shadow) !important;
+        }
+
+        .floating { 
+            animation: float 3s ease-in-out infinite; 
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-7px); }
+        }
+
+        /* עיצוב בחירת רמת קושי ברדיו */
+        input[name="level"]:checked + .level-box {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 10px var(--theme-glow);
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-between min-h-screen p-2 sm:p-4">
+
+    <!-- סרגל עליון קבוע -->
+    <header class="w-full max-w-xl flex items-center justify-between py-2 px-1 mb-2">
+        <a href="../../index.html" class="flex items-center gap-1.5 px-3 py-1.5 bg-white/80 hover:bg-white text-slate-700 rounded-xl font-bold text-xs sm:text-sm border border-slate-200/80 shadow-sm transition active:scale-95" title="חזרה לפורטל המשחקים">
+            <span>🏠</span>
+            <span>פורטל ראשי</span>
+        </a>
+
+        <!-- מחליף ערכת צבעים מהיר -->
+        <div class="flex items-center bg-white/90 p-1 rounded-2xl border border-slate-200 shadow-sm">
+            <button onclick="setTheme('pink')" id="quick-theme-pink" class="px-2.5 py-1 rounded-xl text-xs font-bold transition flex items-center gap-1" title="ערכת ורוד (בנות)">
+                <span>🌸</span>
+                <span class="hidden sm:inline">ורוד</span>
+            </button>
+            <button onclick="setTheme('blue')" id="quick-theme-blue" class="px-2.5 py-1 rounded-xl text-xs font-bold transition flex items-center gap-1" title="ערכת כחול-לבן (בנים)">
+                <span>🌊</span>
+                <span class="hidden sm:inline">כחול-לבן</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- מסך פתיחה -->
+    <div id="setup-screen" class="w-full max-w-xl bg-white rounded-3xl shadow-xl p-4 sm:p-7 text-center border-b-[6px] theme-card-border my-auto transition-all">
+        
+        <!-- כותרת ראשית ומצב ערכה -->
+        <div class="mb-3">
+            <h1 id="game-title" class="text-3xl sm:text-5xl font-black theme-text-primary mb-1 floating">
+                משחק מילים דריה 🌸
+            </h1>
+            <p id="game-subtitle" class="text-gray-500 text-sm sm:text-base font-semibold">
+                איזה כיף ללמוד להקליד ולשחק במילים!
+            </p>
+        </div>
+
+        <!-- בורר ערכת צבעים מעוצב -->
+        <div class="mb-5 bg-slate-50 p-2.5 sm:p-3 rounded-2xl border border-slate-100">
+            <p class="text-xs sm:text-sm font-bold text-gray-600 mb-2">בחרו ערכת צבעים שאוהבים:</p>
+            <div class="grid grid-cols-2 gap-2">
+                <button type="button" onclick="setTheme('pink')" id="setup-theme-pink" class="py-2.5 px-3 rounded-xl border-2 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-sm">
+                    <span class="text-base">🌸</span>
+                    <span>ורוד (בת)</span>
+                </button>
+                <button type="button" onclick="setTheme('blue')" id="setup-theme-blue" class="py-2.5 px-3 rounded-xl border-2 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-sm">
+                    <span class="text-base">🌊</span>
+                    <span>כחול-לבן (בן)</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- בחירת קטגוריית מילים -->
+        <div class="mb-5 text-right">
+            <p class="text-sm sm:text-base font-bold text-gray-700 mb-2">במה נשחק היום?</p>
+            <div class="grid grid-cols-2 gap-2 sm:gap-3">
+                <button onclick="setList('verbs')" class="p-3 bg-orange-50 hover:bg-orange-100 rounded-xl border-2 border-orange-100 font-bold list-btn ring-4 ring-orange-200 scale-105 transition" id="btn-verbs">
+                    🏃 פעלים
+                </button>
+                <button onclick="setList('pronouns')" class="p-3 bg-purple-50 hover:bg-purple-100 rounded-xl border-2 border-purple-100 font-bold list-btn transition" id="btn-pronouns">
+                    👫 גופים
+                </button>
+                <button onclick="setList('animals')" class="p-3 bg-green-50 hover:bg-green-100 rounded-xl border-2 border-green-100 font-bold list-btn transition" id="btn-animals">
+                    🦁 חיות
+                </button>
+                <button onclick="setList('food')" class="p-3 bg-red-50 hover:bg-red-100 rounded-xl border-2 border-red-100 font-bold list-btn transition" id="btn-food">
+                    🍕 אוכל
+                </button>
+            </div>
+        </div>
+
+        <!-- בחירת רמת קושי -->
+        <div class="mb-6 text-right">
+            <p class="text-sm sm:text-base font-bold text-gray-700 mb-2">רמת קושי:</p>
+            <div class="flex gap-2 sm:gap-3">
+                <label class="flex-1 cursor-pointer group relative">
+                    <input type="radio" name="level" value="1" checked class="peer sr-only">
+                    <div class="level-box py-2.5 sm:py-3 bg-gray-50 rounded-xl border-2 border-gray-200 transition-all text-center">
+                        <span class="text-xl sm:text-2xl block">👀</span>
+                        <span class="font-bold text-xs sm:text-base">רואים את המילה</span>
+                    </div>
+                </label>
+                <label class="flex-1 cursor-pointer group relative">
+                    <input type="radio" name="level" value="2" class="peer sr-only">
+                    <div class="level-box py-2.5 sm:py-3 bg-gray-50 rounded-xl border-2 border-gray-200 transition-all text-center">
+                        <span class="text-xl sm:text-2xl block">👂</span>
+                        <span class="font-bold text-xs sm:text-base">שומעים בלבד</span>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- כפתור התחלה -->
+        <button id="start-game-btn" onclick="startGame()" class="w-full theme-btn-primary py-3.5 sm:py-4 rounded-2xl text-lg sm:text-xl font-black shadow-lg active:scale-95 transition-transform">
+            דריה מתחילה לשחק! ▶
+        </button>
+    </div>
+
+    <!-- מסך משחק -->
+    <div id="game-screen" class="hidden w-full max-w-2xl flex flex-col items-center h-full justify-between pb-2 my-auto">
+        
+        <!-- אזור תצוגה עליון -->
+        <div class="w-full bg-white rounded-2xl sm:rounded-3xl shadow-md p-3 sm:p-5 text-center border-b-4 theme-card-border mb-2.5 relative flex flex-col justify-between min-h-[220px] sm:min-h-[260px]">
+            
+            <!-- סרגל סטטוס בתוך המשחק -->
+            <div class="flex justify-between items-center mb-2">
+                <button onclick="showQuitModal()" class="text-gray-400 bg-gray-100 hover:bg-red-100 hover:text-red-500 w-8 h-8 rounded-full font-bold transition-colors flex items-center justify-center text-sm" title="יציאה">
+                    ✕
+                </button>
+                
+                <div class="theme-bg-light px-3.5 py-1 rounded-full border theme-border-primary text-xs sm:text-sm font-bold theme-text-primary">
+                    מילה <span id="progress">1/10</span>
+                </div>
+
+                <div class="flex items-center gap-1 text-sm sm:text-base font-bold text-amber-500 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-100">
+                    <span id="star-count">0</span> ⭐
+                </div>
+            </div>
+
+            <!-- תצוגת המילה וריבועי ההקלדה -->
+            <div class="flex flex-col items-center justify-center flex-1 my-2">
+                <div id="word-display" class="mb-3 flex flex-col justify-center items-center min-h-[60px] sm:min-h-[85px]">
+                    <!-- תוכן המילה -->
+                </div>
+
+                <div id="typing-area" class="flex justify-center flex-wrap gap-1 min-h-[50px] w-full px-2" dir="rtl">
+                    <!-- ריבועי הקלדה -->
+                </div>
+            </div>
+
+            <!-- רמז מקשים -->
+            <div class="text-[11px] text-gray-400 font-medium">
+                הקלידו במקלדת המסך או במקלדת הפיזית
+            </div>
+        </div>
+
+        <!-- מקלדת מלאה ומסודרת LTR -->
+        <div id="virtual-keyboard" class="w-full bg-slate-200/90 p-2 sm:p-3.5 rounded-2xl sm:rounded-3xl shadow-inner flex flex-col gap-1 sm:gap-2" dir="ltr">
+            <!-- נוצר דינמית ב-JavaScript -->
+        </div>
+    </div>
+
+    <!-- מודאל יציאה -->
+    <div id="quit-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white p-6 rounded-3xl max-w-xs w-full text-center shadow-2xl border-b-4 theme-card-border">
+            <h3 class="text-xl font-black mb-2 text-gray-800">לצאת מהמשחק?</h3>
+            <p id="quit-message" class="text-gray-500 mb-6 text-sm">הכוכבים של דריה יתאפסו</p>
+            <div class="flex flex-col gap-2">
+                <button onclick="confirmQuit()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl font-bold transition">
+                    חזרה לתפריט המשחק
+                </button>
+                <a href="../../index.html" class="w-full bg-red-100 hover:bg-red-200 text-red-600 py-2.5 rounded-xl font-bold transition text-center">
+                    יציאה לפורטל הראשי 🏠
+                </a>
+                <button onclick="hideQuitModal()" class="w-full theme-btn-primary py-2.5 rounded-xl font-bold shadow transition">
+                    המשך לשחק!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- הודעת הצלחה קופצת -->
+    <div id="success-overlay" class="hidden fixed inset-0 z-40 flex items-center justify-center pointer-events-none p-4">
+        <div class="bg-white/95 backdrop-blur-md px-8 sm:px-12 py-5 sm:py-7 rounded-3xl shadow-2xl text-center transform scale-110 border-4 border-green-200 animate-bounce">
+            <h2 id="success-text" class="text-4xl sm:text-6xl font-black text-green-600">
+                אלופה! 🌟
+            </h2>
+        </div>
+    </div>
+
+    <!-- מסך סיום משחק -->
+    <div id="end-screen" class="hidden fixed inset-0 bg-white/95 backdrop-blur-md z-50 flex flex-col items-center justify-center text-center p-6">
+        <div class="text-7xl sm:text-8xl mb-4 floating">🏆</div>
+        <h2 id="end-title" class="text-4xl sm:text-5xl font-black theme-text-primary mb-3">
+            כל הכבוד לדריה!
+        </h2>
+        <p class="text-lg sm:text-xl text-gray-600 mb-8">
+            סיימת את כל המילים בהצלחה רבה! 🌟
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3 w-full max-w-sm">
+            <button onclick="returnToMain()" class="flex-1 theme-btn-primary py-3.5 px-6 rounded-2xl text-lg font-black shadow-xl active:scale-95 transition">
+                שחק שוב 🔄
+            </button>
+            <a href="../../index.html" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-800 py-3.5 px-6 rounded-2xl text-lg font-black border border-slate-300 shadow active:scale-95 transition flex items-center justify-center gap-1.5">
+                <span>🏠</span>
+                <span>לפורטל</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // מאגר מילים מנוקד
+        const wordLists = {
+            verbs: ['כָּתַב', 'לָמַד', 'קָפַץ', 'שָׁמַע', 'אָכַל', 'הָלַךְ', 'עָמַד', 'יָשַׁב', 'שָׁתָה', 'רָץ', 'נָהַג', 'חָלַם'],
+            pronouns: ['אֲנִי', 'אַתָּה', 'הוּא', 'אֲנַחְנוּ', 'הֵם', 'הֵן', 'אַתֶּם', 'אַתֶּן', 'הִיא', 'אַתְּ'],
+            animals: ['כֶּלֶב', 'חָתוּל', 'פִּיל', 'אַרְיֵה', 'גִּ׳ירָפָה', 'דּוֹלְפִין', 'סוּס', 'צָב', 'קִפּוֹד', 'נָמֵר', 'חֲסִידָה', 'פַּרְפַּר'],
+            food: ['פִּיצָה', 'בַּמְבָּה', 'גְּלִידָה', 'מָרָק', 'תַּפּוּחַ', 'לֶחֶם', 'חָלָב', 'בָּנָנָה', 'שׁוֹקוֹלָד', 'עוּגָה', 'סָלָט', 'בֵּיצָה']
+        };
+
+        // פריסת מקלדת עברית תואמת מקלדת מחשב (LTR)
+        const keyboardLayout = [
+            ['ק', 'ר', 'א', 'ט', 'ו', 'ן', 'ם', 'פ'],
+            ['ש', 'ד', 'ג', 'כ', 'ע', 'י', 'ח', 'ל', 'ך', 'ף'],
+            ['ז', 'ס', 'ב', 'ה', 'נ', 'מ', 'צ', 'ת', 'ץ']
+        ];
+
+        let currentTheme = 'pink';
+        let currentList = [];
+        let currentIndex = 0;
+        let selectedLevel = 1;
+        let currentTyped = "";
+        let isWaiting = false;
+        let stars = 0;
+        let audioCtx = null; 
+
+        // ערכות צבעים והגדרות טקסט
+        const themes = {
+            pink: {
+                id: 'pink',
+                name: 'ורוד',
+                themeColor: '#ec4899',
+                title: 'משחק מילים דריה 🌸',
+                subtitle: 'איזה כיף ללמוד להקליד ולשחק במילים!',
+                startBtn: 'דריה מתחילה לשחק! ▶',
+                quitMsg: 'הכוכבים של דריה יתאפסו',
+                success: 'אלופה! 🌟',
+                endTitle: 'כל הכבוד לדריה! 🎉',
+                confetti: ['#ec4899', '#fb7185', '#f472b6', '#3b82f6', '#10b981', '#fbcfe8']
+            },
+            blue: {
+                id: 'blue',
+                name: 'כחול-לבן',
+                themeColor: '#2563eb',
+                title: 'משחק מילים ⚽',
+                subtitle: 'איזה כיף ללמוד להקליד ולשחק במילים!',
+                startBtn: 'מתחילים לשחק! ▶',
+                quitMsg: 'הכוכבים שנצברו יתאפסו',
+                success: 'אלוף! 🌟',
+                endTitle: 'כל הכבוד, אלוף! 🎉',
+                confetti: ['#2563eb', '#38bdf8', '#60a5fa', '#0284c7', '#ffffff', '#93c5fd']
+            }
+        };
+
+        // שמירה וטעינה של ערכת צבעים
+        function initTheme() {
+            const saved = localStorage.getItem('daria_words_theme') || 'pink';
+            setTheme(saved, false);
+        }
+
+        function setTheme(themeKey, playSound = true) {
+            currentTheme = themeKey === 'blue' ? 'blue' : 'pink';
+            localStorage.setItem('daria_words_theme', currentTheme);
+            const conf = themes[currentTheme];
+
+            // עדכון מחלקת ה-body
+            if (currentTheme === 'blue') {
+                document.body.classList.add('theme-blue');
+            } else {
+                document.body.classList.remove('theme-blue');
+            }
+
+            // עדכון מטא צבע
+            const metaTheme = document.getElementById('meta-theme-color');
+            if (metaTheme) metaTheme.setAttribute('content', conf.themeColor);
+
+            // עדכון טקסטים מותאמים לערכה
+            document.getElementById('game-title').innerText = conf.title;
+            document.getElementById('game-subtitle').innerText = conf.subtitle;
+            document.getElementById('start-game-btn').innerText = conf.startBtn;
+            document.getElementById('quit-message').innerText = conf.quitMsg;
+            document.getElementById('success-text').innerText = conf.success;
+            document.getElementById('end-title').innerText = conf.endTitle;
+
+            // עדכון כפתורי הבחירה במסך הפתיחה
+            const pinkSetupBtn = document.getElementById('setup-theme-pink');
+            const blueSetupBtn = document.getElementById('setup-theme-blue');
+            if (currentTheme === 'pink') {
+                pinkSetupBtn.className = "py-2.5 px-3 rounded-xl border-2 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-md bg-pink-500 text-white border-pink-600 scale-[1.02]";
+                blueSetupBtn.className = "py-2.5 px-3 rounded-xl border-2 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all bg-white text-gray-700 border-gray-200 hover:bg-gray-50";
+            } else {
+                pinkSetupBtn.className = "py-2.5 px-3 rounded-xl border-2 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all bg-white text-gray-700 border-gray-200 hover:bg-gray-50";
+                blueSetupBtn.className = "py-2.5 px-3 rounded-xl border-2 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-md bg-blue-600 text-white border-blue-700 scale-[1.02]";
+            }
+
+            // עדכון כפתורי הסרגל המהיר
+            const quickPink = document.getElementById('quick-theme-pink');
+            const quickBlue = document.getElementById('quick-theme-blue');
+            if (currentTheme === 'pink') {
+                quickPink.className = "px-2.5 py-1 rounded-xl text-xs font-bold transition flex items-center gap-1 bg-pink-500 text-white shadow-sm";
+                quickBlue.className = "px-2.5 py-1 rounded-xl text-xs font-bold transition flex items-center gap-1 text-gray-600 hover:text-blue-600";
+            } else {
+                quickPink.className = "px-2.5 py-1 rounded-xl text-xs font-bold transition flex items-center gap-1 text-gray-600 hover:text-pink-600";
+                quickBlue.className = "px-2.5 py-1 rounded-xl text-xs font-bold transition flex items-center gap-1 bg-blue-600 text-white shadow-sm";
+            }
+
+            // עדכון תיבות מילה אם המשחק פעיל
+            if (!document.getElementById('game-screen').classList.contains('hidden')) {
+                renderInput();
+            }
+
+            if (playSound) {
+                initAudio();
+                playTone(520, 'sine', 0.08);
+            }
+        }
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playTone(freq, type, duration) {
+            if (!audioCtx) return; 
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) { 
+                console.log('Audio error', e); 
+            }
+        }
+
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'he-IL';
+                utterance.rate = 0.82;
+                utterance.onerror = function() { playNetworkAudio(text); };
+                window.speechSynthesis.cancel();
+                window.speechSynthesis.speak(utterance);
+            } else {
+                playNetworkAudio(text);
+            }
+        }
+
+        function playNetworkAudio(text) {
+            try {
+                const encodedText = encodeURIComponent(text);
+                const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=he&client=tw-ob&q=${encodedText}`;
+                const audio = new Audio(audioUrl);
+                audio.play().catch(e => console.log('Network audio fallback failed', e));
+            } catch (e) { 
+                console.log('Audio playback fallback failed'); 
+            }
+        }
+
+        function cleanWord(word) {
+            return word.replace(/[\u0591-\u05C7]/g, "").replace(/־/g, "").trim();
+        }
+
+        function normalizeChar(char) {
+            if (!char) return '';
+            const map = { 'ך': 'כ', 'ם': 'מ', 'ן': 'נ', 'ף': 'פ', 'ץ': 'צ' };
+            return map[char] || char;
+        }
+
+        function createKeyboard() {
+            const kb = document.getElementById('virtual-keyboard');
+            kb.innerHTML = '';
+            
+            keyboardLayout.forEach(row => {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'flex w-full gap-1 sm:gap-1.5 justify-center'; 
+                
+                row.forEach(key => {
+                    const btn = document.createElement('div');
+                    btn.className = 'kb-key flex-1 h-11 sm:h-16 bg-white rounded-lg sm:rounded-xl flex items-center justify-center text-lg sm:text-3xl font-black text-gray-700 select-none cursor-pointer active:scale-95';
+                    btn.innerText = key;
+                    btn.id = `key-${key}`;
+                    
+                    const pressHandler = (e) => {
+                        e.preventDefault();
+                        handleInput(key);
+                    };
+                    btn.addEventListener('mousedown', pressHandler);
+                    btn.addEventListener('touchstart', pressHandler, { passive: false });
+                    
+                    rowDiv.appendChild(btn);
+                });
+                kb.appendChild(rowDiv);
+            });
+        }
+
+        function setList(key) {
+            currentList = [...wordLists[key]];
+            document.querySelectorAll('.list-btn').forEach(b => {
+                b.classList.remove('ring-4', 'scale-105');
+                b.classList.add('border-transparent');
+            });
+            const activeBtn = document.getElementById('btn-' + key);
+            if(activeBtn) {
+                activeBtn.classList.add('ring-4', 'scale-105');
+                activeBtn.classList.remove('border-transparent');
+            }
+            initAudio(); 
+            playTone(420, 'sine', 0.1);
+        }
+
+        function startGame() {
+            initAudio();
+
+            if (currentList.length === 0) setList('verbs');
+            selectedLevel = parseInt(document.querySelector('input[name="level"]:checked').value);
+            
+            document.getElementById('setup-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.remove('hidden');
+            
+            createKeyboard();
+            currentIndex = 0;
+            stars = 0;
+            document.getElementById('star-count').innerText = "0";
+            loadWord();
+        }
+
+        function loadWord() {
+            currentTyped = "";
+            isWaiting = false;
+            const word = currentList[currentIndex];
+            const cleaned = cleanWord(word);
+            
+            document.getElementById('progress').innerText = `${currentIndex + 1}/${currentList.length}`;
+            
+            const display = document.getElementById('word-display');
+            if (selectedLevel === 1) {
+                display.innerHTML = `<h2 class="text-4xl sm:text-7xl font-black text-gray-800 tracking-wider transition-all text-center">${word}</h2>`;
+            } else {
+                display.innerHTML = `
+                    <button onclick="speak('${cleaned}')" class="theme-bg-light p-3 sm:p-5 rounded-full hover:opacity-90 transition-all border-4 theme-border-primary shadow-lg active:scale-95" title="השמע שוב">
+                        <span class="text-4xl sm:text-6xl block">🔊</span>
+                    </button>
+                    <p class="theme-text-primary font-bold mt-2 text-sm sm:text-base">לחצו לשמוע את המילה</p>
+                `;
+                speak(cleaned);
+            }
+            renderInput();
+        }
+
+        function renderInput() {
+            const target = cleanWord(currentList[currentIndex]);
+            const container = document.getElementById('typing-area');
+            container.innerHTML = "";
+            
+            for (let i = 0; i < target.length; i++) {
+                const box = document.createElement('div');
+                box.className = 'letter-box';
+                if (i < currentTyped.length) {
+                    box.innerText = currentTyped[i];
+                    box.classList.add('correct');
+                } else if (i === currentTyped.length) {
+                    box.classList.add('active-cursor');
+                }
+                container.appendChild(box);
+            }
+        }
+
+        function handleInput(char) {
+            if (isWaiting) return;
+            initAudio();
+            
+            const targetWord = cleanWord(currentList[currentIndex]);
+            const nextCharIndex = currentTyped.length;
+            const targetChar = targetWord[nextCharIndex];
+
+            const keyEl = document.getElementById(`key-${char}`);
+            if (keyEl) {
+                keyEl.classList.add('pressed');
+                setTimeout(() => keyEl.classList.remove('pressed'), 150);
+            }
+
+            if (normalizeChar(char) === normalizeChar(targetChar)) {
+                // תו נכון
+                currentTyped += targetChar; // שימוש באות המקורית של המילה
+                playTone(600 + (nextCharIndex * 50), 'sine', 0.1);
+                renderInput();
+
+                if (currentTyped.length === targetWord.length) {
+                    isWaiting = true;
+                    stars++;
+                    document.getElementById('star-count').innerText = stars;
+                    
+                    setTimeout(() => {
+                        fireConfetti();
+                        document.getElementById('success-overlay').classList.remove('hidden');
+                        playTone(900, 'triangle', 0.12);
+                        setTimeout(() => playTone(1200, 'triangle', 0.22), 120);
+                        
+                        setTimeout(() => {
+                            document.getElementById('success-overlay').classList.add('hidden');
+                            currentIndex++;
+                            if (currentIndex < currentList.length) {
+                                loadWord();
+                            } else {
+                                finishGame();
+                            }
+                        }, 1400);
+                    }, 250);
+                }
+            } else {
+                // תו שגוי
+                playTone(200, 'sawtooth', 0.25);
+                const boxes = document.querySelectorAll('.letter-box');
+                const errorBox = boxes[nextCharIndex];
+                if (errorBox) {
+                    errorBox.innerText = char;
+                    errorBox.classList.add('wrong');
+                    setTimeout(() => {
+                        errorBox.innerText = "";
+                        errorBox.classList.remove('wrong');
+                    }, 400);
+                }
+            }
+        }
+
+        function fireConfetti() {
+            if (typeof confetti === 'function') {
+                const confColors = themes[currentTheme].confetti;
+                confetti({
+                    particleCount: 75,
+                    spread: 65,
+                    origin: { y: 0.65 },
+                    disableForReducedMotion: true,
+                    colors: confColors
+                });
+            }
+        }
+
+        function showQuitModal() {
+            document.getElementById('quit-modal').classList.remove('hidden');
+            isWaiting = true;
+        }
+
+        function hideQuitModal() {
+            document.getElementById('quit-modal').classList.add('hidden');
+            isWaiting = false;
+        }
+
+        function confirmQuit() {
+            hideQuitModal();
+            returnToMain();
+        }
+
+        function returnToMain() {
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('end-screen').classList.add('hidden');
+            document.getElementById('setup-screen').classList.remove('hidden');
+            isWaiting = false;
+            currentTyped = "";
+            stars = 0;
+        }
+
+        function finishGame() {
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('end-screen').classList.remove('hidden');
+            
+            const confColors = themes[currentTheme].confetti;
+            const duration = 2800;
+            const end = Date.now() + duration;
+
+            (function frame() {
+                if (typeof confetti === 'function') {
+                    confetti({ particleCount: 4, angle: 60, spread: 55, origin: { x: 0 }, colors: confColors });
+                    confetti({ particleCount: 4, angle: 120, spread: 55, origin: { x: 1 }, colors: confColors });
+                }
+                if (Date.now() < end) requestAnimationFrame(frame);
+            }());
+        }
+
+        // תמיכה בהקלדה במקלדת פיזית
+        window.addEventListener('keydown', (e) => {
+            if (document.getElementById('game-screen').classList.contains('hidden') || isWaiting) return;
+            const char = e.key;
+            if (/[\u05D0-\u05EA]/.test(char)) {
+                handleInput(char);
+            }
+        });
+
+        // אתחול ערכת צבעים וקטגוריה ראשונית
+        initTheme();
+        currentList = [...wordLists['verbs']];
+    </script>
+</body>
+</html>
