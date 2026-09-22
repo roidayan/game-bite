@@ -189,13 +189,16 @@
         </span>
       </div>
 
-      <!-- Question Text / Equation -->
-      <div class="my-4 sm:my-6 text-center w-full min-h-[90px] flex flex-col items-center justify-center">
-        <div id="questionPrompt" class="text-slate-300 text-sm sm:text-base font-medium mb-3 leading-relaxed max-w-lg">
+      <!-- Question Text / Equation or SVG Diagram -->
+      <div class="my-3 sm:my-5 text-center w-full min-h-[90px] flex flex-col items-center justify-center">
+        <div id="questionPrompt" class="text-slate-200 text-sm sm:text-base font-semibold mb-2 leading-relaxed max-w-lg">
           מה ערכו של הביטוי הבא?
         </div>
         <div id="questionDisplay" class="text-2xl sm:text-3xl md:text-4xl font-black text-white math-ltr-box tracking-wide px-4 py-2 bg-slate-900/60 rounded-2xl border border-slate-800 shadow-inner">
-          <!-- Dynamically inserted -->
+          <!-- Dynamically inserted equation -->
+        </div>
+        <div id="diagramDisplay" class="hidden w-full flex items-center justify-center p-2 rounded-2xl bg-slate-900/70 border border-slate-800/80 shadow-inner">
+          <!-- Dynamically inserted SVG diagram -->
         </div>
       </div>
 
@@ -437,25 +440,83 @@
       ],
       geometry: [
         {
-          prompt: "מהו שטח משולש שאורך בסיסו 8 ס\"מ וגובהו לבסיס 5 ס\"מ?",
-          equation: "S = \\frac{8 \\times 5}{2} = ?",
+          prompt: "חשבו את שטח המשולש המופיע בשרטוט:",
+          diagram: `<svg viewBox="0 0 240 130" class="w-full max-w-[240px] h-auto max-h-[120px]">
+            <polygon points="30,105 210,105 120,20" fill="rgba(16, 185, 129, 0.18)" stroke="#10b981" stroke-width="2.5" stroke-linejoin="round"/>
+            <line x1="120" y1="20" x2="120" y2="105" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4,3"/>
+            <rect x="120" y="93" width="12" height="12" fill="none" stroke="#f59e0b" stroke-width="1.5"/>
+            <text x="135" y="65" fill="#fbbf24" font-size="12" font-weight="bold">גובה = 5 ס"מ</text>
+            <text x="120" y="122" fill="#34d399" font-size="12" font-weight="bold" text-anchor="middle">בסיס = 8 ס"מ</text>
+          </svg>`,
           options: ["20 סמ\"ר", "40 סמ\"ר", "26 סמ\"ר", "13 סמ\"ר"],
           answer: "20 סמ\"ר",
           explanation: "שטח משולש מחושב לפי (בסיס × גובה) ÷ 2: (8 × 5) ÷ 2 = 40 ÷ 2 = 20 סמ\"ר."
         },
         {
-          prompt: "מה נפחה של תיבה שממדיה: אורך 5 ס\"מ, רוחב 4 ס\"מ וגובה 3 ס\"מ?",
-          equation: "V = 5 \\times 4 \\times 3 = ?",
+          prompt: "חשבו את נפח התיבה המופיעה בשרטוט:",
+          diagram: `<svg viewBox="0 0 240 130" class="w-full max-w-[240px] h-auto max-h-[120px]">
+            <polygon points="40,50 85,18 190,18 145,50" fill="rgba(45, 212, 191, 0.2)" stroke="#2dd4bf" stroke-width="2"/>
+            <polygon points="40,50 145,50 145,105 40,105" fill="rgba(16, 185, 129, 0.25)" stroke="#10b981" stroke-width="2"/>
+            <polygon points="145,50 190,18 190,73 145,105" fill="rgba(5, 150, 105, 0.35)" stroke="#059669" stroke-width="2"/>
+            <text x="92" y="120" fill="#34d399" font-size="11" font-weight="bold" text-anchor="middle">אורך = 5 ס"מ</text>
+            <text x="178" y="42" fill="#38bdf8" font-size="11" font-weight="bold">רוחב = 4 ס"מ</text>
+            <text x="32" y="82" fill="#fbbf24" font-size="11" font-weight="bold" text-anchor="end">גובה = 3 ס"מ</text>
+          </svg>`,
           options: ["60 סמ\"ק", "50 סמ\"ק", "12 סמ\"ק", "24 סמ\"ק"],
           answer: "60 סמ\"ק",
-          explanation: "נפח תיבה = אורך × רוחב × גובה = 5 × 4 × 3 = 60 סמ\"ק."
+          explanation: "נפח תיבה מחושב לפי אורך × רוחב × גובה: 5 × 4 × 3 = 60 סמ\"ק."
         },
         {
-          prompt: "אם רדיוס מעגל הוא 7 ס\"מ, מהו קוטר המעגל?",
-          equation: "d = 2 \\times r = ?",
+          prompt: "לפניכם מעגל שמרכזו O. אם רדיוס המעגל הוא 7 ס\"מ, מהו קוטר המעגל?",
+          diagram: `<svg viewBox="0 0 200 120" class="w-full max-w-[200px] h-auto max-h-[115px]">
+            <circle cx="100" cy="60" r="45" fill="rgba(56, 189, 248, 0.12)" stroke="#38bdf8" stroke-width="2.5"/>
+            <circle cx="100" cy="60" r="3.5" fill="#f59e0b"/>
+            <line x1="100" y1="60" x2="145" y2="60" stroke="#f59e0b" stroke-width="2.5"/>
+            <circle cx="145" cy="60" r="2.5" fill="#f59e0b"/>
+            <text x="92" y="64" fill="#94a3b8" font-size="11" font-weight="bold">O</text>
+            <text x="122" y="52" fill="#fbbf24" font-size="11" font-weight="bold" text-anchor="middle">r = 7 ס"מ</text>
+            <text x="100" y="116" fill="#94a3b8" font-size="10" text-anchor="middle">מרכז המעגל O</text>
+          </svg>`,
           options: ["14 ס\"מ", "21 ס\"מ", "49 ס\"מ", "3.5 ס\"מ"],
           answer: "14 ס\"מ",
-          explanation: "קוטר מעגל שווה לפעמיים הרדיוס: 7 × 2 = 14 ס\"מ."
+          explanation: "קוטר מעגל (d) כפול מהרדיוס (r): 7 × 2 = 14 ס\"מ."
+        },
+        {
+          prompt: "חשבו את שטח המקבילית המופיעה בשרטוט:",
+          diagram: `<svg viewBox="0 0 240 125" class="w-full max-w-[240px] h-auto max-h-[115px]">
+            <polygon points="40,95 170,95 200,30 70,30" fill="rgba(16, 185, 129, 0.18)" stroke="#10b981" stroke-width="2.5" stroke-linejoin="round"/>
+            <line x1="70" y1="30" x2="70" y2="95" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4,3"/>
+            <rect x="70" y="83" width="12" height="12" fill="none" stroke="#f59e0b" stroke-width="1.5"/>
+            <text x="58" y="65" fill="#fbbf24" font-size="11" font-weight="bold" text-anchor="end">גובה = 4 ס"מ</text>
+            <text x="105" y="114" fill="#34d399" font-size="12" font-weight="bold" text-anchor="middle">בסיס = 10 ס"מ</text>
+          </svg>`,
+          options: ["40 סמ\"ר", "28 סמ\"ר", "20 סמ\"ר", "80 סמ\"ר"],
+          answer: "40 סמ\"ר",
+          explanation: "שטח מקבילית מחושב לפי בסיס × גובה: 10 × 4 = 40 סמ\"ר."
+        },
+        {
+          prompt: "חשבו את שטח המשולש ישר-הזווית שבשרטוט:",
+          diagram: `<svg viewBox="0 0 220 125" class="w-full max-w-[220px] h-auto max-h-[115px]">
+            <polygon points="50,95 175,95 50,25" fill="rgba(56, 189, 248, 0.18)" stroke="#38bdf8" stroke-width="2.5" stroke-linejoin="round"/>
+            <rect x="50" y="83" width="12" height="12" fill="none" stroke="#f59e0b" stroke-width="1.5"/>
+            <text x="42" y="62" fill="#fbbf24" font-size="11" font-weight="bold" text-anchor="end">4 ס"מ</text>
+            <text x="112" y="114" fill="#38bdf8" font-size="12" font-weight="bold" text-anchor="middle">6 ס"מ</text>
+          </svg>`,
+          options: ["12 סמ\"ר", "24 סמ\"ר", "10 סמ\"ר", "20 סמ\"ר"],
+          answer: "12 סמ\"ר",
+          explanation: "במשולש ישר-זווית הניצבים משמשים כבסיס וגובה: (6 × 4) ÷ 2 = 24 ÷ 2 = 12 סמ\"ר."
+        },
+        {
+          prompt: "לפניכם קובייה שאורך צלעה 4 ס\"מ. מהו נפח הקובייה?",
+          diagram: `<svg viewBox="0 0 200 125" class="w-full max-w-[200px] h-auto max-h-[115px]">
+            <polygon points="45,45 80,20 145,20 110,45" fill="rgba(168, 85, 247, 0.25)" stroke="#a855f7" stroke-width="2"/>
+            <polygon points="45,45 110,45 110,95 45,95" fill="rgba(192, 132, 252, 0.2)" stroke="#c084fc" stroke-width="2"/>
+            <polygon points="110,45 145,20 145,70 110,95" fill="rgba(147, 51, 234, 0.35)" stroke="#9333ea" stroke-width="2"/>
+            <text x="77" y="112" fill="#c084fc" font-size="11" font-weight="bold" text-anchor="middle">צלע = 4 ס"מ</text>
+          </svg>`,
+          options: ["64 סמ\"ק", "16 סמ\"ק", "48 סמ\"ק", "32 סמ\"ק"],
+          answer: "64 סמ\"ק",
+          explanation: "נפח קובייה שווה לצלע בחזקת 3: 4 × 4 × 4 = 64 סמ\"ק."
         }
       ]
     };
@@ -511,7 +572,20 @@
 
       document.getElementById('topicName').innerText = topicTitles[q.category] || 'תרגיל מתקדם';
       document.getElementById('questionPrompt').innerText = q.prompt;
-      document.getElementById('questionDisplay').innerText = q.equation.replace(/\\times/g, '×').replace(/\\div/g, '÷').replace(/\\frac{(\d+)}{(\d+)}/g, '$1/$2').replace(/\\text{.*?}/g, '');
+
+      const questionDisplay = document.getElementById('questionDisplay');
+      const diagramDisplay = document.getElementById('diagramDisplay');
+
+      if (q.diagram) {
+        questionDisplay.classList.add('hidden');
+        diagramDisplay.classList.remove('hidden');
+        diagramDisplay.innerHTML = q.diagram;
+      } else {
+        diagramDisplay.classList.add('hidden');
+        questionDisplay.classList.remove('hidden');
+        const eqText = q.equation ? q.equation.replace(/\\times/g, '×').replace(/\\div/g, '÷').replace(/\\frac{(\d+)}{(\d+)}/g, '$1/$2').replace(/\\text{.*?}/g, '') : '';
+        questionDisplay.innerText = eqText;
+      }
 
       const feedbackBox = document.getElementById('feedbackBox');
       feedbackBox.classList.add('hidden');
